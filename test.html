@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CDP Tracking Test Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      h1 {
+        color: #333;
+      }
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        margin-right: 10px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0069d9;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .event-log {
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 10px;
+        height: 200px;
+        overflow-y: auto;
+        margin-top: 20px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CDP Tracking Test Page</h1>
+
+    <div class="card">
+      <h2>Configuration</h2>
+      <div>
+        <label for="tracker-id">Tracker ID:</label>
+        <input type="text" id="tracker-id" value="TEST_TRACKER_ID" />
+      </div>
+      <div>
+        <label for="cdn-domain">CDN Domain:</label>
+        <input type="text" id="cdn-domain" value="localhost:3000" />
+      </div>
+      <div>
+        <label for="api-domain">API Domain:</label>
+        <input type="text" id="api-domain" value="localhost:3000" />
+      </div>
+      <button id="apply-config">Apply Configuration</button>
+    </div>
+
+    <div class="card">
+      <h2>View Events</h2>
+      <button id="track-page-view">Track Page View</button>
+      <button id="track-content-impression">Track Content Impression</button>
+    </div>
+
+    <div class="card">
+      <h2>Action Events</h2>
+      <button id="track-button-click">Track Button Click</button>
+      <button id="track-form-submit">Track Form Submit</button>
+    </div>
+
+    <div class="card">
+      <h2>Conversion Events</h2>
+      <button id="track-purchase">Track Purchase</button>
+      <button id="track-signup">Track Signup</button>
+    </div>
+
+    <div class="card">
+      <h2>Feedback Events</h2>
+      <button id="track-rating">Track Rating</button>
+      <button id="track-survey">Track Survey Response</button>
+    </div>
+
+    <div class="card">
+      <h2>Profile Updates</h2>
+      <button id="update-profile">Update Profile</button>
+    </div>
+
+    <div class="card">
+      <h2>Custom Event</h2>
+      <div>
+        <label for="event-type">Event Type:</label>
+        <select id="event-type">
+          <option value="view">View</option>
+          <option value="action">Action</option>
+          <option value="conversion">Conversion</option>
+          <option value="feedback">Feedback</option>
+          <option value="profile">Profile</option>
+        </select>
+      </div>
+      <div>
+        <label for="event-name">Event Name:</label>
+        <input type="text" id="event-name" value="custom_event" />
+      </div>
+      <div>
+        <label for="event-data">Event Data (JSON):</label>
+        <textarea id="event-data" rows="4">
+{"custom_property": "custom_value"}</textarea
+        >
+      </div>
+      <button id="track-custom">Track Custom Event</button>
+    </div>
+
+    <div class="event-log" id="event-log">
+      <div>Event log will appear here...</div>
+    </div>
+
+    <!-- Client Integration Code - Nhúng trực tiếp vào trang -->
+    <script>
+      // Configuration
+      window.cdpTrackerId = "TEST_TRACKER_ID";
+      window.cdpTrackerCdnDomain = "localhost:3000";
+      window.cdpTrackerApiDomain = "localhost:3000";
+
+      // Metadata about the current page
+      window.cdpPageTitle = encodeURIComponent(document.title);
+      window.cdpPageUrl = encodeURIComponent(location.href);
+
+      // Event log function
+      function logEvent(message) {
+        const logElement = document.getElementById("event-log");
+        const timestamp = new Date().toISOString();
+        logElement.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+        logElement.scrollTop = logElement.scrollHeight;
+      }
+
+      // Apply configuration
+      document
+        .getElementById("apply-config")
+        .addEventListener("click", function () {
+          window.cdpTrackerId = document.getElementById("tracker-id").value;
+          window.cdpTrackerCdnDomain =
+            document.getElementById("cdn-domain").value;
+          window.cdpTrackerApiDomain =
+            document.getElementById("api-domain").value;
+
+          logEvent(
+            `Configuration applied: Tracker ID=${window.cdpTrackerId}, CDN Domain=${window.cdpTrackerCdnDomain}, API Domain=${window.cdpTrackerApiDomain}`
+          );
+
+          // Reinitialize the tracking system
+          initializeTracking();
+        });
+
+      // Client Integration Code - Đây là đoạn code mà người dùng sẽ nhúng vào trang web của họ
+      (function () {
+        // Define internal tracking function that will be available before the script loads
+        // This will queue events until the main script is loaded
+        window._trackEvent =
+          window._trackEvent ||
+          function (eventType, eventName, eventData, extraParams) {
+            window._trackEvent.queue = window._trackEvent.queue || [];
+            window._trackEvent.queue.push({
+              eventType: eventType,
+              eventName: eventName,
+              eventData: eventData || {},
+              extraParams: extraParams || {},
+              timestamp: new Date().getTime(),
+            });
+          };
+
+        // Define the CDP global object with specific tracking methods
+        window.CDP = window.CDP || {
+          // Track view events (pageviews, content impressions)
+          trackView: function (eventName, eventData) {
+            window._trackEvent("view", eventName, eventData);
+          },
+
+          // Track action events (clicks, form submissions, user interactions)
+          trackAction: function (eventName, eventData) {
+            window._trackEvent("action", eventName, eventData);
+          },
+
+          // Track conversion events (purchases, sign-ups, goal completions)
+          trackConversion: function (
+            eventName,
+            eventData,
+            transactionId,
+            items,
+            value,
+            currency
+          ) {
+            window._trackEvent("conversion", eventName, eventData, {
+              transactionId: transactionId || "",
+              items: items || [],
+              value: value || 0,
+              currency: currency || "USD",
+            });
+          },
+
+          // Track feedback events (ratings, reviews, surveys)
+          trackFeedback: function (eventName, eventData) {
+            window._trackEvent("feedback", eventName, eventData);
+          },
+
+          // Update user profile information
+          updateProfile: function (profileData, extData) {
+            window._trackEvent(
+              "profile",
+              "update_profile",
+              {},
+              {
+                profileData: profileData || {},
+                extData: extData || {},
+              }
+            );
+          },
+        };
+
+        // Helper function to parse UTM parameters
+        window.parseUtmParams = function () {
+          if (location.search.indexOf("utm_") > 0) {
+            var search = location.search.substring(1);
+            var json = decodeURI(search)
+              .replace(/"/g, '\\"')
+              .replace(/&/g, '","')
+              .replace(/=/g, '":"');
+            return JSON.parse('{"' + json + '"}');
+          }
+          return {};
+        };
+      })();
+
+      // Function to load the CDP tracker script from CDN
+      function initializeTracking() {
+        // Remove existing script if any
+        const existingScript = document.getElementById("cdp-script");
+        if (existingScript) {
+          existingScript.remove();
+        }
+
+        // Create and load the script
+        const script = document.createElement("script");
+        script.id = "cdp-script";
+        script.src = `http://${window.cdpTrackerCdnDomain}/cdp-tracker.js`;
+        script.async = true;
+        script.onerror = function () {
+          logEvent(
+            "Error loading CDP script. Make sure the server is running and serving the cdp-tracker.js file."
+          );
+        };
+        script.onload = function () {
+          logEvent("CDP script loaded successfully.");
+        };
+        document.body.appendChild(script);
+      }
+
+      // Event handlers
+      document
+        .getElementById("track-page-view")
+        .addEventListener("click", function () {
+          if (window.CDP) {
+            window.CDP.trackView("page_view", {
+              page: window.location.pathname,
+            });
+            logEvent("Tracked page_view event");
+          } else {
+            logEvent("CDP not loaded yet");
+          }
+        });
+
+      document
+        .getElementById("track-content-impression")
+        .addEventListener("click", function () {
+          if (window.CDP) {
+            window.CDP.trackView("content_impression", {
+              content_id: "article-123",
+              content_type: "article",
+            });
+            logEvent("Tracked content_impression event");
+          } else {
+            logEvent("CDP not loaded yet");
+          }
+        });
+
+      document
+        .getElementById("track-button-click")
+        .addEventListener("click", function () {
+          if (window.CDP) {
+            window.CDP.trackAction("button_click", {
+              button_id: "test-button",
+              button_text: "Test Button",
+            });
+            logEvent("Tracked button_click event");
+          } else {
+            logEvent("CDP not loaded yet");
+          }
+        });
+
+      document
+        .getElementById("track-form-submit")
+        .addEventListener("click", function () {
+          if (window.CDP) {
+            window.CDP.trackAction("form_submit", {
+              form_id: "test-form",
+              form_name: "Test Form",
+            });
+            logEvent("Tracked form_submit event");
+          } else {
+            logEvent("CDP not loaded yet");
+          }
+        });
+
+      document
+        .getElementById("track-purchase")
+        .addEventListener("click", function () {
+          if (window.CDP) {
+            window.CDP.trackConversion(
+              "purchase",
+              { payment_method: "credit_card" },
+              "ORDER123",
+              [
+                {
+                  product_id: "PROD1",
+                  product_name: "Test Product",
+                  price: 99.99,
+                  quantity: 1,
+                },
+              ],
+              99.99,
+              "USD"
+            );
+            logEvent("Tracked purchase event");
+          } else {
+            logEvent("CDP not loaded yet");
+          }
+        });
+
+      document
+        .getElementById("track-signup")
+        .addEventListener("click", function () {
+          if (window.CDP) {
+            window.CDP.trackConversion(
+              "signup",
+              { signup_method: "email" },
+              "USER123",
+              [],
+              0,
+              "USD"
+            );
+            logEvent("Tracked signup event");
+          } else {
+            logEvent("CDP not loaded yet");
+          }
+        });
+
+      document
+        .getElementById("track-rating")
+        .addEventListener("click", function () {
+          if (window.CDP) {
+            window.CDP.trackFeedback("product_rating", {
+              product_id: "PROD1",
+              rating: 5,
+              comment: "Great product!",
+            });
+            logEvent("Tracked product_rating event");
+          } else {
+            logEvent("CDP not loaded yet");
+          }
+        });
+
+      document
+        .getElementById("track-survey")
+        .addEventListener("click", function () {
+          if (window.CDP) {
+            window.CDP.trackFeedback("survey_response", {
+              survey_id: "SURV1",
+              question_id: "Q1",
+              response: "Very satisfied",
+            });
+            logEvent("Tracked survey_response event");
+          } else {
+            logEvent("CDP not loaded yet");
+          }
+        });
+
+      document
+        .getElementById("update-profile")
+        .addEventListener("click", function () {
+          if (window.CDP) {
+            window.CDP.updateProfile(
+              {
+                email: "test@example.com",
+                name: "Test User",
+                age: 30,
+                interests: ["technology", "sports"],
+              },
+              {
+                source: "test_page",
+                consent: {
+                  marketing: true,
+                  analytics: true,
+                },
+              }
+            );
+            logEvent("Updated profile");
+          } else {
+            logEvent("CDP not loaded yet");
+          }
+        });
+
+      document
+        .getElementById("track-custom")
+        .addEventListener("click", function () {
+          if (window.CDP) {
+            const eventType = document.getElementById("event-type").value;
+            const eventName = document.getElementById("event-name").value;
+            let eventData;
+
+            try {
+              eventData = JSON.parse(
+                document.getElementById("event-data").value
+              );
+            } catch (e) {
+              logEvent("Error parsing event data JSON");
+              return;
+            }
+
+            switch (eventType) {
+              case "view":
+                window.CDP.trackView(eventName, eventData);
+                break;
+              case "action":
+                window.CDP.trackAction(eventName, eventData);
+                break;
+              case "conversion":
+                window.CDP.trackConversion(
+                  eventName,
+                  eventData,
+                  "CUSTOM123",
+                  [],
+                  0,
+                  "USD"
+                );
+                break;
+              case "feedback":
+                window.CDP.trackFeedback(eventName, eventData);
+                break;
+              case "profile":
+                window.CDP.updateProfile(eventData, {});
+                break;
+            }
+
+            logEvent(`Tracked custom ${eventType} event: ${eventName}`);
+          } else {
+            logEvent("CDP not loaded yet");
+          }
+        });
+
+      // Initialize tracking on page load
+      window.addEventListener("load", initializeTracking);
+
+      // Track page view automatically when script loads
+      window.addEventListener("load", function () {
+        setTimeout(function () {
+          if (window.CDP) {
+            window.CDP.trackView("page_view", window.parseUtmParams());
+          }
+        }, 1000); // Đợi 1 giây để đảm bảo script đã load xong
+      });
+    </script>
+  </body>
+</html>
