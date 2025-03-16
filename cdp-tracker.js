@@ -1,1 +1,303 @@
-function _0x18fe(){var _0x148452=['cdn.cdpdomain.com','assign','cdpPageTitle','value','protocol','iframe','Error\x20sending\x20message\x20to\x20CDP\x20tracker\x20iframe:','return\x20(function()\x20','CDPTracker','toString','profileData','currency','CDP_TRACKER_READY','12960664OLSJDR','display:none!important;width:0px!important;height:0px!important;border:0!important;','1238338qmRSYn','hostname','cdpTrackerCdnDomain','apply','Sending\x20message\x20to\x20iframe\x20with\x20targetOrigin:','prototype','35GxKDrt','114684whvQrW','addEventListener','postMessage','table','shift','warn','push','undefined','trackFeedback','info','href','getElementById','eventName','allowedOrigins','TRACK_EVENT','conversion','trackView','Error\x20processing\x20message\x20from\x20CDP\x20tracker\x20iframe:','contentWindow','update_profile','console','title','3850170VYSAno','cdpTrackerId','transactionId','Creating\x20iframe\x20with\x20src:','messageQueue','bind','755614VSCngv','trackConversion','eventType','extData','sendToIframe','items','length','__proto__','error','log','exception','eventData','setupMessageListener','processEvent','action','cdp_tracker_iframe','cdpPageUrl','message','Error\x20sending\x20message\x20to\x20CDP\x20tracker\x20iframe\x20with\x20wildcard\x20origin:','_trackEvent','referrer','6834667sZVHKu','getTime','queue','indexOf','origin','body','updateProfile','trackAction','api.cdpdomain.com','CDP','USD','src','/tracker-iframe.html#','data','cdpTrackerApiDomain','init','iframeLoaded','style','profile','processQueue','3040821vMZrnk','host'];_0x18fe=function(){return _0x148452;};return _0x18fe();}function _0x5d42(_0x20022e,_0xf629dc){var _0x760e80=_0x18fe();return _0x5d42=function(_0x1dff32,_0x46a9df){_0x1dff32=_0x1dff32-0xa7;var _0x33d03a=_0x760e80[_0x1dff32];return _0x33d03a;},_0x5d42(_0x20022e,_0xf629dc);}(function(_0x3d34d4,_0x251c3e){var _0x1975b6=_0x5d42,_0x26e4da=_0x3d34d4();while(!![]){try{var _0x4a3765=parseInt(_0x1975b6(0xeb))/0x1+parseInt(_0x1975b6(0xc8))/0x2+-parseInt(_0x1975b6(0xb7))/0x3+parseInt(_0x1975b6(0xcf))/0x4*(parseInt(_0x1975b6(0xce))/0x5)+-parseInt(_0x1975b6(0xe5))/0x6+-parseInt(_0x1975b6(0x100))/0x7+parseInt(_0x1975b6(0xc6))/0x8;if(_0x4a3765===_0x251c3e)break;else _0x26e4da['push'](_0x26e4da['shift']());}catch(_0x12624b){_0x26e4da['push'](_0x26e4da['shift']());}}}(_0x18fe,0x89aa8),(function(){var _0x311f99=_0x5d42,_0x5ae7b9=(function(){var _0x4388c7=!![];return function(_0x1e9f1d,_0x226074){var _0xbed6cd=_0x4388c7?function(){var _0xf11e1b=_0x5d42;if(_0x226074){var _0x321a24=_0x226074[_0xf11e1b(0xcb)](_0x1e9f1d,arguments);return _0x226074=null,_0x321a24;}}:function(){};return _0x4388c7=![],_0xbed6cd;};}()),_0x343d5a=_0x5ae7b9(this,function(){var _0x3c1db3=_0x5d42,_0x1d2228=function(){var _0x209106=_0x5d42,_0x22115e;try{_0x22115e=Function(_0x209106(0xc0)+'{}.constructor(\x22return\x20this\x22)(\x20)'+');')();}catch(_0x2f5382){_0x22115e=window;}return _0x22115e;},_0x3fe473=_0x1d2228(),_0x245e3f=_0x3fe473[_0x3c1db3(0xe3)]=_0x3fe473['console']||{},_0x241daa=[_0x3c1db3(0xf4),_0x3c1db3(0xd4),_0x3c1db3(0xd8),'error',_0x3c1db3(0xf5),_0x3c1db3(0xd2),'trace'];for(var _0x1f0138=0x0;_0x1f0138<_0x241daa[_0x3c1db3(0xf1)];_0x1f0138++){var _0x3b6e14=_0x5ae7b9['constructor'][_0x3c1db3(0xcd)]['bind'](_0x5ae7b9),_0x5b630f=_0x241daa[_0x1f0138],_0x38d21f=_0x245e3f[_0x5b630f]||_0x3b6e14;_0x3b6e14[_0x3c1db3(0xf2)]=_0x5ae7b9[_0x3c1db3(0xea)](_0x5ae7b9),_0x3b6e14[_0x3c1db3(0xc2)]=_0x38d21f[_0x3c1db3(0xc2)][_0x3c1db3(0xea)](_0x38d21f),_0x245e3f[_0x5b630f]=_0x3b6e14;}});_0x343d5a();if(typeof window[_0x311f99(0xc1)]!==_0x311f99(0xd6))return;var _0x2b05f0=window[_0x311f99(0xe6)],_0x58ea29=window[_0x311f99(0xca)]||_0x311f99(0xb9),_0x5b186a=window[_0x311f99(0xb1)]||_0x311f99(0xab),_0x198721=location['protocol']+'//'+location['host'],_0x351e29={'iframe':null,'iframeLoaded':![],'allowedOrigins':[location[_0x311f99(0xbd)]+'//'+_0x58ea29,location[_0x311f99(0xbd)]+'//'+_0x5b186a],'messageQueue':[]};_0x351e29[_0x311f99(0xb2)]=function(){var _0x3ad781=_0x311f99;if(!document[_0x3ad781(0xda)]('cdp_tracker_iframe')){var _0x2332c4=location[_0x3ad781(0xbd)]+'//'+location[_0x3ad781(0xb8)],_0x463efe={'trackerId':_0x2b05f0,'parentOrigin':_0x2332c4,'apiDomain':_0x5b186a},_0x15b821=encodeURIComponent(JSON['stringify'](_0x463efe)),_0x14e7f4=location[_0x3ad781(0xbd)]+'//'+_0x58ea29+_0x3ad781(0xaf)+_0x15b821;console['log'](_0x3ad781(0xe8),_0x14e7f4);var _0x221967=document['createElement'](_0x3ad781(0xbe));_0x221967['setAttribute'](_0x3ad781(0xb4),_0x3ad781(0xc7)),_0x221967['width']=0x0,_0x221967['height']=0x0,_0x221967['id']=_0x3ad781(0xfa),_0x221967[_0x3ad781(0xae)]=_0x14e7f4;var _0x5b7a28=document['getElementsByTagName'](_0x3ad781(0xa8))[0x0];_0x5b7a28?(_0x5b7a28['appendChild'](_0x221967),this[_0x3ad781(0xbe)]=_0x221967,this[_0x3ad781(0xf7)]()):setTimeout(function(){var _0x325fb9=_0x3ad781;_0x351e29[_0x325fb9(0xb2)]();},0x64);}},_0x351e29['setupMessageListener']=function(){var _0xa51e55=_0x311f99;window[_0xa51e55(0xd0)](_0xa51e55(0xfc),function(_0x152bf2){var _0x5312e5=_0xa51e55;if(_0x351e29[_0x5312e5(0xdc)][_0x5312e5(0x103)](_0x152bf2[_0x5312e5(0xa7)])===-0x1)return;try{var _0x4c7a19=_0x152bf2[_0x5312e5(0xb0)];if(_0x4c7a19===_0x5312e5(0xc5)){_0x351e29[_0x5312e5(0xb3)]=!![],_0x351e29[_0x5312e5(0xb6)]();if(window[_0x5312e5(0xfe)]&&window[_0x5312e5(0xfe)]['queue']&&window[_0x5312e5(0xfe)][_0x5312e5(0x102)][_0x5312e5(0xf1)]>0x0){var _0xc0820=window['_trackEvent'][_0x5312e5(0x102)];window[_0x5312e5(0xfe)]['queue']=[];for(var _0x3fab6c=0x0;_0x3fab6c<_0xc0820[_0x5312e5(0xf1)];_0x3fab6c++){var _0x4c7c34=_0xc0820[_0x3fab6c];_0x351e29[_0x5312e5(0xf8)](_0x4c7c34[_0x5312e5(0xed)],_0x4c7c34[_0x5312e5(0xdb)],_0x4c7c34[_0x5312e5(0xf6)],_0x4c7c34['extraParams']);}}}}catch(_0x4375bf){console[_0x5312e5(0xf3)](_0x5312e5(0xe0),_0x4375bf);}},![]);},_0x351e29[_0x311f99(0xef)]=function(_0x400a03){var _0x52254c=_0x311f99;if(!this['iframe']||!this[_0x52254c(0xb3)]){this[_0x52254c(0xe9)][_0x52254c(0xd5)](_0x400a03);return;}try{var _0x3f3a38=location[_0x52254c(0xc9)]==='localhost'||location[_0x52254c(0xc9)]==='127.0.0.1',_0x5c67cc=_0x3f3a38?'*':location['protocol']+'//'+_0x58ea29;console[_0x52254c(0xf4)](_0x52254c(0xcc),_0x5c67cc),this[_0x52254c(0xbe)][_0x52254c(0xe1)][_0x52254c(0xd1)](_0x400a03,_0x5c67cc);}catch(_0xd5c9ea){console[_0x52254c(0xf3)](_0x52254c(0xbf),_0xd5c9ea);try{this[_0x52254c(0xbe)][_0x52254c(0xe1)][_0x52254c(0xd1)](_0x400a03,'*');}catch(_0x55e8e9){console[_0x52254c(0xf3)](_0x52254c(0xfd),_0x55e8e9);}}},_0x351e29[_0x311f99(0xb6)]=function(){var _0x4b0602=_0x311f99;if(!this[_0x4b0602(0xb3)])return;while(this[_0x4b0602(0xe9)][_0x4b0602(0xf1)]>0x0){var _0x372dac=this[_0x4b0602(0xe9)][_0x4b0602(0xd3)]();this[_0x4b0602(0xef)](_0x372dac);}},_0x351e29[_0x311f99(0xf8)]=function(_0x20fcb0,_0x233141,_0x2c707d,_0x10cd9b){var _0x2a0413=_0x311f99;if(!_0x20fcb0||!_0x233141)return;var _0x44df65={'type':_0x2a0413(0xdd),'eventType':_0x20fcb0,'trackerId':_0x2b05f0,'eventName':_0x233141,'eventData':_0x2c707d||{},'pageUrl':window[_0x2a0413(0xfb)]||encodeURIComponent(location[_0x2a0413(0xd9)]),'pageTitle':window[_0x2a0413(0xbb)]||encodeURIComponent(document[_0x2a0413(0xe4)]),'referrer':encodeURIComponent(document[_0x2a0413(0xff)]),'timestamp':new Date()[_0x2a0413(0x101)]()},_0x9a6361=Object[_0x2a0413(0xba)]({},_0x44df65);if(_0x20fcb0==='conversion'&&_0x10cd9b)_0x9a6361['transactionId']=_0x10cd9b[_0x2a0413(0xe7)]||'',_0x9a6361[_0x2a0413(0xf0)]=_0x10cd9b[_0x2a0413(0xf0)]||[],_0x9a6361[_0x2a0413(0xbc)]=_0x10cd9b[_0x2a0413(0xbc)]||0x0,_0x9a6361[_0x2a0413(0xc4)]=_0x10cd9b[_0x2a0413(0xc4)]||_0x2a0413(0xad);else _0x20fcb0==='profile'&&_0x10cd9b&&(_0x9a6361[_0x2a0413(0xc3)]=_0x10cd9b[_0x2a0413(0xc3)]||{},_0x9a6361[_0x2a0413(0xee)]=_0x10cd9b[_0x2a0413(0xee)]||{});this[_0x2a0413(0xef)](_0x9a6361);},_0x351e29['trackView']=function(_0x3421fd,_0xfc1e03){this['processEvent']('view',_0x3421fd,_0xfc1e03);},_0x351e29[_0x311f99(0xaa)]=function(_0x34506e,_0x176322){var _0x359c6c=_0x311f99;this['processEvent'](_0x359c6c(0xf9),_0x34506e,_0x176322);},_0x351e29[_0x311f99(0xec)]=function(_0x9948e8,_0x4f5389,_0x3f323c,_0x891c6f,_0x1dade6,_0x344351){var _0x4eda1c=_0x311f99,_0xbcae3={'transactionId':_0x3f323c||'','items':_0x891c6f||[],'value':_0x1dade6||0x0,'currency':_0x344351||_0x4eda1c(0xad)};this[_0x4eda1c(0xf8)](_0x4eda1c(0xde),_0x9948e8,_0x4f5389,_0xbcae3);},_0x351e29[_0x311f99(0xd7)]=function(_0x1d2c10,_0x546af6){var _0x5ea7d7=_0x311f99;this[_0x5ea7d7(0xf8)]('feedback',_0x1d2c10,_0x546af6);},_0x351e29[_0x311f99(0xa9)]=function(_0x5cb861,_0xfd10c0){var _0x404de3=_0x311f99,_0x1c706f={'profileData':_0x5cb861||{},'extData':_0xfd10c0||{}};this[_0x404de3(0xf8)](_0x404de3(0xb5),_0x404de3(0xe2),{},_0x1c706f);},_0x351e29['init'](),window[_0x311f99(0xfe)]=function(_0x52eaef,_0x3a5f9f,_0xdaa572,_0x4b953c){var _0x1c362e=_0x311f99;_0x351e29[_0x1c362e(0xf8)](_0x52eaef,_0x3a5f9f,_0xdaa572,_0x4b953c);},window[_0x311f99(0xac)]={'trackView':function(_0x427b1d,_0x38557c){var _0x3102b=_0x311f99;_0x351e29[_0x3102b(0xdf)](_0x427b1d,_0x38557c);},'trackAction':function(_0x28bff1,_0x525c46){_0x351e29['trackAction'](_0x28bff1,_0x525c46);},'trackConversion':function(_0x2f1c6a,_0x20bc5e,_0xf702fd,_0x3f9aca,_0x2a9cee,_0x5e4354){var _0x4f91eb=_0x311f99;_0x351e29[_0x4f91eb(0xec)](_0x2f1c6a,_0x20bc5e,_0xf702fd,_0x3f9aca,_0x2a9cee,_0x5e4354);},'trackFeedback':function(_0x35a104,_0x1b6555){var _0x1365e4=_0x311f99;_0x351e29[_0x1365e4(0xd7)](_0x35a104,_0x1b6555);},'updateProfile':function(_0xccfbf8,_0x5be0a6){var _0x3dfaf3=_0x311f99;_0x351e29[_0x3dfaf3(0xa9)](_0xccfbf8,_0x5be0a6);}},window[_0x311f99(0xc1)]=_0x351e29;}()));
+/**
+ * CDP Tracker Script (CDN hosted)
+ *
+ * This script is loaded from the CDN and is responsible for:
+ * 1. Creating an iframe to isolate tracking functionality
+ * 2. Setting up communication between the parent page and the iframe
+ * 3. Processing queued events and forwarding them to the iframe
+ */
+(function () {
+  // Check if tracker is already initialized
+  if (typeof window.CDPTracker !== "undefined") {
+    return;
+  }
+
+  // Get configuration from the parent page
+  var trackerId = window.cdpTrackerId;
+  var cdnDomain = window.cdpTrackerCdnDomain || "cdn.cdpdomain.com";
+  var apiDomain = window.cdpTrackerApiDomain || "api.cdpdomain.com";
+  var currentPageUrl = location.protocol + "//" + location.host;
+
+  // Create the tracker object
+  var cdpTracker = {
+    iframe: null,
+    iframeLoaded: false,
+    allowedOrigins: [
+      location.protocol + "//" + cdnDomain,
+      location.protocol + "//" + apiDomain,
+    ],
+    messageQueue: [],
+  };
+
+  // Initialize the tracker
+  cdpTracker.init = function () {
+    // Create the iframe if it doesn't exist
+    if (!document.getElementById("cdp_tracker_iframe")) {
+      // Ensure we have a valid origin for the current page
+      var currentPageOrigin = location.protocol + "//" + location.host;
+
+      // Create a config object to pass to the iframe
+      var iframeConfig = {
+        trackerId: trackerId,
+        parentOrigin: currentPageOrigin,
+        apiDomain: apiDomain,
+      };
+
+      // Encode the config as JSON and add to hash
+      var configParam = encodeURIComponent(JSON.stringify(iframeConfig));
+
+      // Create iframe URL with config in the hash
+      var iframeSrc =
+        location.protocol +
+        "//" +
+        cdnDomain +
+        "/tracker-iframe.html#" +
+        configParam;
+
+      console.log("Creating iframe with src:", iframeSrc);
+
+      var iframe = document.createElement("iframe");
+      iframe.setAttribute(
+        "style",
+        "display:none!important;width:0px!important;height:0px!important;border:0!important;"
+      );
+      iframe.width = 0;
+      iframe.height = 0;
+      iframe.id = "cdp_tracker_iframe";
+      iframe.src = iframeSrc;
+
+      // Append iframe to the body
+      var body = document.getElementsByTagName("body")[0];
+      if (body) {
+        body.appendChild(iframe);
+        this.iframe = iframe;
+
+        // Set up message listener for iframe communication
+        this.setupMessageListener();
+      } else {
+        // If body is not available yet, try again later
+        setTimeout(function () {
+          cdpTracker.init();
+        }, 100);
+      }
+    }
+  };
+
+  // Set up message listener for iframe communication
+  cdpTracker.setupMessageListener = function () {
+    window.addEventListener(
+      "message",
+      function (event) {
+        // Verify the message origin
+        if (cdpTracker.allowedOrigins.indexOf(event.origin) === -1) {
+          return;
+        }
+
+        // Process messages from the iframe
+        try {
+          var message = event.data;
+
+          if (message === "CDP_TRACKER_READY") {
+            cdpTracker.iframeLoaded = true;
+            cdpTracker.processQueue();
+
+            // Process any events that were queued before the script loaded
+            if (
+              window._trackEvent &&
+              window._trackEvent.queue &&
+              window._trackEvent.queue.length > 0
+            ) {
+              var queue = window._trackEvent.queue;
+              window._trackEvent.queue = [];
+
+              for (var i = 0; i < queue.length; i++) {
+                var item = queue[i];
+                cdpTracker.processEvent(
+                  item.eventType,
+                  item.eventName,
+                  item.eventData,
+                  item.extraParams
+                );
+              }
+            }
+          }
+        } catch (e) {
+          console.error("Error processing message from CDP tracker iframe:", e);
+        }
+      },
+      false
+    );
+  };
+
+  // Send a message to the iframe
+  cdpTracker.sendToIframe = function (message) {
+    if (!this.iframe || !this.iframeLoaded) {
+      this.messageQueue.push(message);
+      return;
+    }
+
+    try {
+      // Determine if we're in a development environment (localhost)
+      var isDevelopment =
+        location.hostname === "localhost" || location.hostname === "127.0.0.1";
+
+      // Use wildcard origin in development, specific origin in production
+      var targetOrigin = isDevelopment
+        ? "*"
+        : location.protocol + "//" + cdnDomain;
+
+      console.log("Sending message to iframe with targetOrigin:", targetOrigin);
+      this.iframe.contentWindow.postMessage(message, targetOrigin);
+    } catch (e) {
+      console.error("Error sending message to CDP tracker iframe:", e);
+      // Try with wildcard as fallback
+      try {
+        this.iframe.contentWindow.postMessage(message, "*");
+      } catch (e2) {
+        console.error(
+          "Error sending message to CDP tracker iframe with wildcard origin:",
+          e2
+        );
+      }
+    }
+  };
+
+  // Process queued messages
+  cdpTracker.processQueue = function () {
+    if (!this.iframeLoaded) {
+      return;
+    }
+
+    while (this.messageQueue.length > 0) {
+      var message = this.messageQueue.shift();
+      this.sendToIframe(message);
+    }
+  };
+
+  // Process different types of events
+  cdpTracker.processEvent = function (
+    eventType,
+    eventName,
+    eventData,
+    extraParams
+  ) {
+    if (!eventType || !eventName) {
+      return;
+    }
+
+    // Common event data
+    var commonData = {
+      type: "TRACK_EVENT",
+      eventType: eventType,
+      trackerId: trackerId,
+      eventName: eventName,
+      eventData: eventData || {},
+      pageUrl: window.cdpPageUrl || encodeURIComponent(location.href),
+      pageTitle: window.cdpPageTitle || encodeURIComponent(document.title),
+      referrer: encodeURIComponent(document.referrer),
+      timestamp: new Date().getTime(),
+    };
+
+    // Add extra parameters based on event type
+    var event = Object.assign({}, commonData);
+
+    if (eventType === "conversion" && extraParams) {
+      event.transactionId = extraParams.transactionId || "";
+      event.items = extraParams.items || [];
+      event.value = extraParams.value || 0;
+      event.currency = extraParams.currency || "USD";
+    } else if (eventType === "profile" && extraParams) {
+      event.profileData = extraParams.profileData || {};
+      event.extData = extraParams.extData || {};
+    }
+
+    // Send to iframe
+    this.sendToIframe(event);
+  };
+
+  // Track view events
+  cdpTracker.trackView = function (eventName, eventData) {
+    this.processEvent("view", eventName, eventData);
+  };
+
+  // Track action events
+  cdpTracker.trackAction = function (eventName, eventData) {
+    this.processEvent("action", eventName, eventData);
+  };
+
+  // Track conversion events
+  cdpTracker.trackConversion = function (
+    eventName,
+    eventData,
+    transactionId,
+    items,
+    value,
+    currency
+  ) {
+    var extraParams = {
+      transactionId: transactionId || "",
+      items: items || [],
+      value: value || 0,
+      currency: currency || "USD",
+    };
+    this.processEvent("conversion", eventName, eventData, extraParams);
+  };
+
+  // Track feedback events
+  cdpTracker.trackFeedback = function (eventName, eventData) {
+    this.processEvent("feedback", eventName, eventData);
+  };
+
+  // Update user profile
+  cdpTracker.updateProfile = function (profileData, extData) {
+    var extraParams = {
+      profileData: profileData || {},
+      extData: extData || {},
+    };
+    this.processEvent("profile", "update_profile", {}, extraParams);
+  };
+
+  // Initialize the tracker
+  cdpTracker.init();
+
+  // Override the internal tracking function
+  window._trackEvent = function (eventType, eventName, eventData, extraParams) {
+    cdpTracker.processEvent(eventType, eventName, eventData, extraParams);
+  };
+
+  // Set up the CDP global object
+  window.CDP = {
+    trackView: function (eventName, eventData) {
+      cdpTracker.trackView(eventName, eventData);
+    },
+    trackAction: function (eventName, eventData) {
+      cdpTracker.trackAction(eventName, eventData);
+    },
+    trackConversion: function (
+      eventName,
+      eventData,
+      transactionId,
+      items,
+      value,
+      currency
+    ) {
+      cdpTracker.trackConversion(
+        eventName,
+        eventData,
+        transactionId,
+        items,
+        value,
+        currency
+      );
+    },
+    trackFeedback: function (eventName, eventData) {
+      cdpTracker.trackFeedback(eventName, eventData);
+    },
+    updateProfile: function (profileData, extData) {
+      cdpTracker.updateProfile(profileData, extData);
+    },
+  };
+
+  // Expose the tracker object
+  window.CDPTracker = cdpTracker;
+})();

@@ -12,6 +12,7 @@ var CONFIG = {
   parentOrigin: "",
   apiDomain: "",
   sessionCacheMinutes: 30,
+  ipAddress: "",
 };
 
 // Parse configuration from URL hash
@@ -422,18 +423,414 @@ function prepareCommonTrackingData() {
   // Update last activity time
   updateLastActivity();
 
-  // Return common tracking data
+  // Detect browser information
+  var browserInfo = detectBrowser();
+
+  // Detect device information
+  var deviceInfo = detectDevice();
+
+  // Get page performance data
+  var performanceData = getPerformanceData();
+
+  // Get network information
+  var networkInfo = getNetworkInfo();
+
+  // Get current page URL and referrer
+  var urlInfo = getUrlInfo();
+
+  // Generate ISO timestamp
+  var isoTimestamp = new Date(SESSION.lastActivity).toISOString();
+
+  // Return common tracking data with enhanced information
   return {
+    // Basic tracking info
     trackerId: CONFIG.trackerId,
     visitorId: SESSION.visitorId,
     sessionId: SESSION.sessionId,
     fingerprint: SESSION.fingerprint,
     timestamp: SESSION.lastActivity,
+
+    // ISO formatted timestamp
+    timestampISO: isoTimestamp,
+
+    // User agent info
     userAgent: navigator.userAgent,
     language: navigator.language,
+    languages: navigator.languages ? JSON.stringify(navigator.languages) : "",
+    doNotTrack:
+      navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack,
+
+    // Browser info with simplified name
+    browserName: browserInfo.browser,
+    browserVersion: browserInfo.version,
+
+    // IP address
+    ipAddress: CONFIG.ipAddress,
+
+    // Device identification
+    deviceOs: deviceInfo.os + " " + deviceInfo.osVersion,
+    deviceType: getDeviceTypeDescription(deviceInfo),
+
+    // Screen and window info
     screenResolution: screen.width + "x" + screen.height,
+    screenColorDepth: screen.colorDepth,
+    screenOrientation: screen.orientation ? screen.orientation.type : "",
+    windowSize: window.innerWidth + "x" + window.innerHeight,
+    devicePixelRatio: window.devicePixelRatio || 1,
+
+    // Browser capabilities
+    cookiesEnabled: navigator.cookieEnabled,
+    localStorageAvailable: isLocalStorageAvailable(),
+    sessionStorageAvailable: isSessionStorageAvailable(),
+
+    // System info
+    platform: navigator.platform,
     timezone: new Date().getTimezoneOffset(),
+    timezoneString: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+
+    // Device capabilities
+    deviceMemory: navigator.deviceMemory || "unknown",
+    hardwareConcurrency: navigator.hardwareConcurrency || "unknown",
+    maxTouchPoints: navigator.maxTouchPoints || 0,
+
+    // Enhanced data
+    browser: browserInfo.browser,
+    browserVersion: browserInfo.version,
+    os: deviceInfo.os,
+    osVersion: deviceInfo.osVersion,
+    deviceType: deviceInfo.deviceType,
+    isMobile: deviceInfo.isMobile,
+    isTablet: deviceInfo.isTablet,
+    isDesktop: deviceInfo.isDesktop,
+
+    // Page URL information
+    pageUrl: urlInfo.currentUrl,
+    prePageUrl: urlInfo.referrerUrl,
+
+    // Performance data
+    pageLoadTime: performanceData.pageLoadTime,
+    domInteractive: performanceData.domInteractive,
+    domComplete: performanceData.domComplete,
+
+    // Network info
+    connectionType: networkInfo.type,
+    effectiveConnectionType: networkInfo.effectiveType,
+    downlink: networkInfo.downlink,
+    rtt: networkInfo.rtt,
+
+    // Referrer and URL data
+    referrer: document.referrer,
+    referrerDomain: getReferrerDomain(),
+
+    // Session data
+    sessionDuration:
+      SESSION.lastActivity -
+      parseInt(
+        sessionStorage.getItem("cdp_session_start") || SESSION.lastActivity
+      ),
+    isNewVisitor:
+      !localStorage.getItem("cdp_visitor_id") ||
+      localStorage.getItem("cdp_visitor_id") !== SESSION.visitorId,
+    isNewSession:
+      !sessionStorage.getItem("cdp_session_id") ||
+      sessionStorage.getItem("cdp_session_id") !== SESSION.sessionId,
+
+    // Private data fields - these should be handled with care and only collected when explicitly provided
+    // These fields are marked as private and should be encrypted or hashed before storage
+    privateEmail: "", // Should be populated only when user explicitly provides email
+    privatePhone: "", // Should be populated only when user explicitly provides phone
   };
+}
+
+// Helper function to detect browser
+function detectBrowser() {
+  var userAgent = navigator.userAgent;
+  var browser = "unknown";
+  var version = "unknown";
+
+  // Detect Chrome
+  if (
+    /Chrome/.test(userAgent) &&
+    !/Chromium|Edge|Edg|OPR|Opera/.test(userAgent)
+  ) {
+    browser = "Chrome";
+    version = userAgent.match(/Chrome\/(\d+\.\d+)/)?.[1] || "unknown";
+  }
+  // Detect Firefox
+  else if (/Firefox/.test(userAgent)) {
+    browser = "Firefox";
+    version = userAgent.match(/Firefox\/(\d+\.\d+)/)?.[1] || "unknown";
+  }
+  // Detect Safari
+  else if (
+    /Safari/.test(userAgent) &&
+    !/Chrome|Chromium|Edge|Edg|OPR|Opera/.test(userAgent)
+  ) {
+    browser = "Safari";
+    version = userAgent.match(/Version\/(\d+\.\d+)/)?.[1] || "unknown";
+  }
+  // Detect Edge
+  else if (/Edge|Edg/.test(userAgent)) {
+    browser = "Edge";
+    var edgeMatch = userAgent.match(/Edge\/(\d+\.\d+)|Edg\/(\d+\.\d+)/);
+    version = edgeMatch?.[1] || edgeMatch?.[2] || "unknown";
+  }
+  // Detect Opera
+  else if (/OPR|Opera/.test(userAgent)) {
+    browser = "Opera";
+    var operaMatch = userAgent.match(/OPR\/(\d+\.\d+)|Opera\/(\d+\.\d+)/);
+    version = operaMatch?.[1] || operaMatch?.[2] || "unknown";
+  }
+  // Detect IE
+  else if (/MSIE|Trident/.test(userAgent)) {
+    browser = "Internet Explorer";
+    var ieMatch =
+      userAgent.match(/MSIE (\d+\.\d+)/) || userAgent.match(/rv:(\d+\.\d+)/);
+    version = ieMatch?.[1] || "unknown";
+  }
+
+  return { browser: browser, version: version };
+}
+
+//Helper get IP address
+function getIpAddress() {
+  return fetch("https://api.ipify.org?format=json")
+    .then((response) => response.json())
+    .then((data) => data.ip)
+    .catch((error) => {
+      console.error("Error getting IP address:", error);
+      return "unknown";
+    });
+}
+
+// Helper function to detect device
+function detectDevice() {
+  var userAgent = navigator.userAgent;
+  var platform = navigator.platform;
+  var os = "unknown";
+  var osVersion = "unknown";
+  var deviceType = "unknown";
+  var isMobile = false;
+  var isTablet = false;
+  var isDesktop = false;
+
+  // Detect iOS
+  if (/iPhone|iPad|iPod/.test(userAgent)) {
+    os = "iOS";
+    var iosMatch = userAgent.match(/OS (\d+_\d+)/);
+    osVersion = iosMatch ? iosMatch[1].replace("_", ".") : "unknown";
+    deviceType = /iPad/.test(userAgent) ? "tablet" : "mobile";
+    isMobile = deviceType === "mobile";
+    isTablet = deviceType === "tablet";
+  }
+  // Detect Android
+  else if (/Android/.test(userAgent)) {
+    os = "Android";
+    var androidMatch = userAgent.match(/Android (\d+\.\d+)/);
+    osVersion = androidMatch ? androidMatch[1] : "unknown";
+    deviceType = /Mobile/.test(userAgent) ? "mobile" : "tablet";
+    isMobile = deviceType === "mobile";
+    isTablet = deviceType === "tablet";
+  }
+  // Detect Windows
+  else if (/Win/.test(platform)) {
+    os = "Windows";
+    var winMatch = userAgent.match(/Windows NT (\d+\.\d+)/);
+    osVersion = winMatch ? winMatch[1] : "unknown";
+    deviceType = "desktop";
+    isDesktop = true;
+  }
+  // Detect macOS
+  else if (/Mac/.test(platform)) {
+    os = "macOS";
+    var macMatch = userAgent.match(/Mac OS X (\d+[._]\d+)/);
+    osVersion = macMatch ? macMatch[1].replace("_", ".") : "unknown";
+    deviceType = "desktop";
+    isDesktop = true;
+  }
+  // Detect Linux
+  else if (/Linux/.test(platform)) {
+    os = "Linux";
+    deviceType = "desktop";
+    isDesktop = true;
+  }
+
+  return {
+    os: os,
+    osVersion: osVersion,
+    deviceType: deviceType,
+    isMobile: isMobile,
+    isTablet: isTablet,
+    isDesktop: isDesktop,
+  };
+}
+
+// Helper function to get performance data
+function getPerformanceData() {
+  var pageLoadTime = 0;
+  var domInteractive = 0;
+  var domComplete = 0;
+
+  if (window.performance && window.performance.timing) {
+    var timing = window.performance.timing;
+    pageLoadTime = timing.loadEventEnd - timing.navigationStart;
+    domInteractive = timing.domInteractive - timing.navigationStart;
+    domComplete = timing.domComplete - timing.navigationStart;
+  }
+
+  return {
+    pageLoadTime: pageLoadTime,
+    domInteractive: domInteractive,
+    domComplete: domComplete,
+  };
+}
+
+// Helper function to get network information
+function getNetworkInfo() {
+  var connection =
+    navigator.connection ||
+    navigator.mozConnection ||
+    navigator.webkitConnection;
+  var type = "unknown";
+  var effectiveType = "unknown";
+  var downlink = 0;
+  var rtt = 0;
+
+  if (connection) {
+    type = connection.type || "unknown";
+    effectiveType = connection.effectiveType || "unknown";
+    downlink = connection.downlink || 0;
+    rtt = connection.rtt || 0;
+  }
+
+  return {
+    type: type,
+    effectiveType: effectiveType,
+    downlink: downlink,
+    rtt: rtt,
+  };
+}
+
+// Helper function to get referrer domain
+function getReferrerDomain() {
+  if (!document.referrer) return "";
+  try {
+    var url = new URL(document.referrer);
+    return url.hostname;
+  } catch (e) {
+    return "";
+  }
+}
+
+// Helper function to check if localStorage is available
+function isLocalStorageAvailable() {
+  try {
+    var test = "__test__";
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Helper function to check if sessionStorage is available
+function isSessionStorageAvailable() {
+  try {
+    var test = "__test__";
+    sessionStorage.setItem(test, test);
+    sessionStorage.removeItem(test);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Helper function to generate a device ID
+function generateDeviceId() {
+  // Create a device ID based on fingerprint and device characteristics
+  var deviceIdBase =
+    SESSION.fingerprint +
+    "_" +
+    navigator.platform +
+    "_" +
+    screen.width +
+    "x" +
+    screen.height +
+    "_" +
+    navigator.hardwareConcurrency;
+
+  // Hash the device ID base to create a consistent ID
+  var hash = 0;
+  for (var i = 0; i < deviceIdBase.length; i++) {
+    hash = (hash << 5) - hash + deviceIdBase.charCodeAt(i);
+    hash |= 0; // Convert to 32bit integer
+  }
+
+  return "dev_" + Math.abs(hash).toString(16);
+}
+
+// Helper function to get a user-friendly device type description
+function getDeviceTypeDescription(deviceInfo) {
+  if (deviceInfo.isTablet) {
+    return "Tablet";
+  } else if (deviceInfo.isMobile) {
+    return "Mobile";
+  } else if (deviceInfo.isDesktop) {
+    if (/macbook|macbookpro|macbookair/i.test(navigator.userAgent)) {
+      return "MacBook";
+    } else if (/surface/i.test(navigator.userAgent)) {
+      return "Surface";
+    } else {
+      return "Laptop";
+    }
+  } else {
+    return "Unknown";
+  }
+}
+
+// Helper function to get current URL and referrer information
+function getUrlInfo() {
+  var currentUrl = "";
+  var referrerUrl = "";
+
+  try {
+    // Try to get the parent page URL through postMessage communication
+    if (window.parent && window.parent !== window) {
+      // The iframe can't directly access parent URL due to same-origin policy
+      // This information should be passed from the parent page
+      currentUrl = document.referrer || "";
+    } else {
+      currentUrl = window.location.href;
+    }
+
+    // Get the referrer URL
+    referrerUrl = document.referrer || "";
+  } catch (e) {
+    console.error("Error getting URL information:", e);
+  }
+
+  return {
+    currentUrl: currentUrl,
+    referrerUrl: referrerUrl,
+  };
+}
+
+// Function to update private user data - should only be called when user explicitly provides this information
+function updatePrivateUserData(email, phone) {
+  var commonData = prepareCommonTrackingData();
+  if (!commonData) return;
+
+  // Update the private fields
+  if (email) {
+    commonData.privateEmail = email;
+  }
+
+  if (phone) {
+    commonData.privatePhone = phone;
+  }
+
+  return commonData;
 }
 
 // Send tracking data to CDP API
@@ -683,3 +1080,9 @@ if (document.readyState === "loading") {
 } else {
   init();
 }
+
+// Get IP address and set it to ipAddress variable
+getIpAddress().then((ip) => {
+  CONFIG.ipAddress = ip;
+  console.log("IP address:", CONFIG.ipAddress);
+});
