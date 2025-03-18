@@ -90,24 +90,85 @@ CDP.trackConversion(
     // Event data
     payment_method: "credit_card",
   },
-  "ORDER123", // Transaction ID
-  [
-    // Shopping cart items
-    {
-      product_id: "PROD1",
-      product_name: "Smartphone",
-      price: 999.99,
-      quantity: 1,
+  {
+    transactionId: "TXN-20250303-0001",
+    value: 1029.98,
+    currency: "USD",
+    status: "Completed",
+    timestamp: "2025-03-03T04:36:02.955Z",
+    store: {
+      id: "STORE-001",
+      name: "Example Store",
+      branch: "Downtown",
+      location: {
+        country: "USA",
+        state: "California",
+        city: "San Francisco",
+        address: "123 Market Street",
+      },
     },
-    {
-      product_id: "PROD2",
-      product_name: "Phone Case",
-      price: 29.99,
-      quantity: 1,
+    customer: {
+      id: "CUST-123456",
+      email: "john.doe@example.com",
+      phone: "+84901234567",
+      firstName: "John",
+      lastName: "Doe",
+      type: "VIP",
+      segment: "High-Value",
+      membershipId: "MEM-98765",
+      isNewCustomer: false,
     },
-  ],
-  1029.98, // Total value
-  "USD" // Currency
+    payment: {
+      method: "Credit Card",
+      gateway: "Stripe",
+      installments: 3,
+      status: "Paid",
+      cardType: "Visa",
+      last4: "4242",
+    },
+    discount: {
+      total: 50.75,
+      code: "SPRINGSALE2025",
+      type: "Percentage",
+      campaign: "Spring Sale",
+    },
+    items: [
+      {
+        id: "PROD-001",
+        sku: "SKU-12345",
+        name: "Smartphone",
+        category: "Electronics",
+        subcategory: "Phones",
+        brand: "Apple",
+        variant: "Black",
+        price: 999.99,
+        originalPrice: 1050.0,
+        quantity: 1,
+        currency: "USD",
+        discount: {
+          amount: 25.0,
+          type: "Fixed",
+        },
+      },
+      {
+        id: "PROD-002",
+        sku: "SKU-54321",
+        name: "Phone Case",
+        category: "Accessories",
+        subcategory: "Phone Cases",
+        brand: "OtterBox",
+        variant: "Clear",
+        price: 29.99,
+        originalPrice: 39.99,
+        quantity: 1,
+        currency: "USD",
+        discount: {
+          amount: 10.0,
+          type: "Fixed",
+        },
+      },
+    ],
+  }
 );
 
 // Track a sign-up
@@ -116,10 +177,13 @@ CDP.trackConversion(
   {
     signup_method: "email",
   },
-  "USER123", // User ID as transaction ID
-  [], // No items
-  0, // No monetary value
-  "USD"
+  {
+    transactionId: "USER123",
+    value: 0,
+    currency: "USD",
+    status: "Completed",
+    items: [],
+  }
 );
 ```
 
@@ -241,4 +305,5 @@ If tracking is not working:
 2. Verify that all files are properly hosted on the CDN
 3. Ensure the API endpoints are accessible and responding correctly
 4. Check that the origin validation is not blocking legitimate messages
+
 # TackingEvent

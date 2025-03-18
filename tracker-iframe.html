@@ -939,14 +939,7 @@
       }
 
       // Process conversion events
-      function processConversionEvent(
-        eventName,
-        eventData,
-        transactionId,
-        items,
-        value,
-        currency
-      ) {
+      function processConversionEvent(eventName, eventData, purchaseInfo) {
         var commonData = prepareCommonTrackingData();
         if (!commonData) return;
 
@@ -954,11 +947,13 @@
           eventType: "conversion",
           eventName: eventName,
           eventData: eventData,
-          transactionId: transactionId || "",
-          items: items || [],
-          value: value || 0,
-          currency: currency || "USD",
-          referrer: eventData.referrer || "",
+          purchaseInfo: purchaseInfo || {
+            transactionId: "",
+            value: 0,
+            currency: "USD",
+            status: "Pending",
+            items: [],
+          },
         });
 
         sendTrackingData("/track/conversion", trackingData);
@@ -1066,10 +1061,7 @@
                 processConversionEvent(
                   eventName,
                   eventData,
-                  message.transactionId,
-                  message.items,
-                  message.value,
-                  message.currency
+                  message.purchaseInfo
                 );
                 break;
               case "feedback":

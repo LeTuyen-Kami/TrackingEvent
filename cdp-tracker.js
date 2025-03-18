@@ -202,10 +202,14 @@
     var event = Object.assign({}, commonData);
 
     if (eventType === "conversion" && extraParams) {
-      event.transactionId = extraParams.transactionId || "";
-      event.items = extraParams.items || [];
-      event.value = extraParams.value || 0;
-      event.currency = extraParams.currency || "USD";
+      // Use the new purchaseInfo object structure
+      event.purchaseInfo = extraParams.purchaseInfo || {
+        transactionId: "",
+        value: 0,
+        currency: "USD",
+        status: "Pending",
+        items: [],
+      };
     } else if (eventType === "profile" && extraParams) {
       event.profileData = extraParams.profileData || {};
       event.extData = extraParams.extData || {};
@@ -226,19 +230,15 @@
   };
 
   // Track conversion events
-  cdpTracker.trackConversion = function (
-    eventName,
-    eventData,
-    transactionId,
-    items,
-    value,
-    currency
-  ) {
+  cdpTracker.trackConversion = function (eventName, eventData, purchaseInfo) {
     var extraParams = {
-      transactionId: transactionId || "",
-      items: items || [],
-      value: value || 0,
-      currency: currency || "USD",
+      purchaseInfo: purchaseInfo || {
+        transactionId: "",
+        value: 0,
+        currency: "USD",
+        status: "Pending",
+        items: [],
+      },
     };
     this.processEvent("conversion", eventName, eventData, extraParams);
   };
@@ -273,22 +273,8 @@
     trackAction: function (eventName, eventData) {
       cdpTracker.trackAction(eventName, eventData);
     },
-    trackConversion: function (
-      eventName,
-      eventData,
-      transactionId,
-      items,
-      value,
-      currency
-    ) {
-      cdpTracker.trackConversion(
-        eventName,
-        eventData,
-        transactionId,
-        items,
-        value,
-        currency
-      );
+    trackConversion: function (eventName, eventData, purchaseInfo) {
+      cdpTracker.trackConversion(eventName, eventData, purchaseInfo);
     },
     trackFeedback: function (eventName, eventData) {
       cdpTracker.trackFeedback(eventName, eventData);

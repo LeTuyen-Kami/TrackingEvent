@@ -59,17 +59,16 @@
       <h2>Configuration</h2>
       <div>
         <label for="tracker-id">Tracker ID:</label>
-        <input type="text" id="tracker-id" value="TEST_TRACKER_ID" />
+        <input type="text" id="tracker-id" readonly />
       </div>
       <div>
         <label for="cdn-domain">CDN Domain:</label>
-        <input type="text" id="cdn-domain" value="localhost:3000" />
+        <input type="text" id="cdn-domain" readonly />
       </div>
       <div>
         <label for="api-domain">API Domain:</label>
-        <input type="text" id="api-domain" value="localhost:3000" />
+        <input type="text" id="api-domain" readonly />
       </div>
-      <button id="apply-config">Apply Configuration</button>
     </div>
 
     <div class="card">
@@ -133,7 +132,7 @@
     <!-- Client Integration Code - Nhúng trực tiếp vào trang -->
     <script>
       // Configuration
-      window.cdpTrackerId = "TEST_TRACKER_ID";
+      window.cdpTrackerId = "TEST_TRACKER_ID1";
       window.cdpTrackerCdnDomain = "localhost:3000";
       window.cdpTrackerApiDomain = "localhost:3000";
 
@@ -150,22 +149,27 @@
       }
 
       // Apply configuration
-      document
-        .getElementById("apply-config")
-        .addEventListener("click", function () {
-          window.cdpTrackerId = document.getElementById("tracker-id").value;
-          window.cdpTrackerCdnDomain =
-            document.getElementById("cdn-domain").value;
-          window.cdpTrackerApiDomain =
-            document.getElementById("api-domain").value;
+      // document
+      //   .getElementById("apply-config")
+      //   .addEventListener("click", function () {
+      //     window.cdpTrackerId = document.getElementById("tracker-id").value;
+      //     window.cdpTrackerCdnDomain =
+      //       document.getElementById("cdn-domain").value;
+      //     window.cdpTrackerApiDomain =
+      //       document.getElementById("api-domain").value;
 
-          logEvent(
-            `Configuration applied: Tracker ID=${window.cdpTrackerId}, CDN Domain=${window.cdpTrackerCdnDomain}, API Domain=${window.cdpTrackerApiDomain}`
-          );
+      //     logEvent(
+      //       `Configuration applied: Tracker ID=${window.cdpTrackerId}, CDN Domain=${window.cdpTrackerCdnDomain}, API Domain=${window.cdpTrackerApiDomain}`
+      //     );
 
-          // Reinitialize the tracking system
-          initializeTracking();
-        });
+      //     // Reinitialize the tracking system
+      //     initializeTracking();
+      //   });
+
+      //Show Config
+      document.getElementById("tracker-id").value = window.cdpTrackerId;
+      document.getElementById("cdn-domain").value = window.cdpTrackerCdnDomain;
+      document.getElementById("api-domain").value = window.cdpTrackerApiDomain;
 
       // Client Integration Code - Đây là đoạn code mà người dùng sẽ nhúng vào trang web của họ
       (function () {
@@ -197,19 +201,15 @@
           },
 
           // Track conversion events (purchases, sign-ups, goal completions)
-          trackConversion: function (
-            eventName,
-            eventData,
-            transactionId,
-            items,
-            value,
-            currency
-          ) {
+          trackConversion: function (eventName, eventData, purchaseInfo) {
             window._trackEvent("conversion", eventName, eventData, {
-              transactionId: transactionId || "",
-              items: items || [],
-              value: value || 0,
-              currency: currency || "USD",
+              purchaseInfo: purchaseInfo || {
+                transactionId: "",
+                value: 0,
+                currency: "USD",
+                status: "Pending",
+                items: [],
+              },
             });
           },
 
@@ -333,17 +333,85 @@
             window.CDP.trackConversion(
               "purchase",
               { payment_method: "credit_card" },
-              "ORDER123",
-              [
-                {
-                  product_id: "PROD1",
-                  product_name: "Test Product",
-                  price: 99.99,
-                  quantity: 1,
+              {
+                transactionId: "TXN-20250303-0001",
+                value: 500.75,
+                currency: "USD",
+                status: "Completed",
+                timestamp: "2025-03-03T04:36:02.955Z",
+                store: {
+                  id: "STORE-001",
+                  name: "Example Store",
+                  branch: "Downtown",
+                  location: {
+                    country: "USA",
+                    state: "California",
+                    city: "San Francisco",
+                    address: "123 Market Street",
+                  },
                 },
-              ],
-              99.99,
-              "USD"
+                customer: {
+                  id: "CUST-123456",
+                  email: "john.doe@example.com",
+                  phone: "+84901234567",
+                  firstName: "John",
+                  lastName: "Doe",
+                  type: "VIP",
+                  segment: "High-Value",
+                  membershipId: "MEM-98765",
+                  isNewCustomer: false,
+                },
+                payment: {
+                  method: "Credit Card",
+                  gateway: "Stripe",
+                  installments: 3,
+                  status: "Paid",
+                  cardType: "Visa",
+                  last4: "4242",
+                },
+                discount: {
+                  total: 50.75,
+                  code: "SPRINGSALE2025",
+                  type: "Percentage",
+                  campaign: "Spring Sale",
+                },
+                items: [
+                  {
+                    id: "PROD-001",
+                    sku: "SKU-12345",
+                    name: "Wireless Headphones",
+                    category: "Electronics",
+                    subcategory: "Audio",
+                    brand: "Sony",
+                    variant: "Black",
+                    price: 200.0,
+                    originalPrice: 250.0,
+                    quantity: 2,
+                    currency: "USD",
+                    discount: {
+                      amount: 25.0,
+                      type: "Fixed",
+                    },
+                  },
+                  {
+                    id: "PROD-002",
+                    sku: "SKU-54321",
+                    name: "Smart Watch",
+                    category: "Wearables",
+                    subcategory: "Watches",
+                    brand: "Apple",
+                    variant: "Silver",
+                    price: 300.75,
+                    originalPrice: 350.75,
+                    quantity: 1,
+                    currency: "USD",
+                    discount: {
+                      amount: 25.0,
+                      type: "Fixed",
+                    },
+                  },
+                ],
+              }
             );
             logEvent("Tracked purchase event");
           } else {
@@ -358,10 +426,13 @@
             window.CDP.trackConversion(
               "signup",
               { signup_method: "email" },
-              "USER123",
-              [],
-              0,
-              "USD"
+              {
+                transactionId: "USER123",
+                value: 0,
+                currency: "USD",
+                status: "Completed",
+                items: [],
+              }
             );
             logEvent("Tracked signup event");
           } else {
@@ -449,14 +520,13 @@
                 window.CDP.trackAction(eventName, eventData);
                 break;
               case "conversion":
-                window.CDP.trackConversion(
-                  eventName,
-                  eventData,
-                  "CUSTOM123",
-                  [],
-                  0,
-                  "USD"
-                );
+                window.CDP.trackConversion(eventName, eventData, {
+                  transactionId: "CUSTOM123",
+                  value: 0,
+                  currency: "USD",
+                  status: "Completed",
+                  items: [],
+                });
                 break;
               case "feedback":
                 window.CDP.trackFeedback(eventName, eventData);

@@ -52,19 +52,15 @@
     },
 
     // Track conversion events (purchases, sign-ups, goal completions)
-    trackConversion: function (
-      eventName,
-      eventData,
-      transactionId,
-      items,
-      value,
-      currency
-    ) {
+    trackConversion: function (eventName, eventData, purchaseInfo) {
       window._trackEvent("conversion", eventName, eventData, {
-        transactionId: transactionId || "",
-        items: items || [],
-        value: value || 0,
-        currency: currency || "USD",
+        purchaseInfo: purchaseInfo || {
+          transactionId: "",
+          value: 0,
+          currency: "USD",
+          status: "Pending",
+          items: [],
+        },
       });
     },
 
