@@ -19,6 +19,11 @@
         apiDomain: "",
         sessionCacheMinutes: 30,
         ipAddress: "",
+        endpoint: "",
+        protocol: "",
+        header: {
+          "Content-Type": "application/json",
+        },
       };
 
       // Parse configuration from URL hash
@@ -38,7 +43,9 @@
                 // Cập nhật cấu hình từ object JSON
                 CONFIG.trackerId = config.trackerId || "";
                 CONFIG.apiDomain = config.apiDomain || "";
-
+                CONFIG.endpoint = config.endpoint || "";
+                CONFIG.protocol = config.protocol || "";
+                CONFIG.header = config.header || {};
                 // Xử lý parentOrigin
                 if (config.parentOrigin === "*") {
                   CONFIG.parentOrigin = "*";
@@ -101,7 +108,9 @@
                     } else {
                       // If it's just a domain, construct an origin with the current protocol
                       CONFIG.parentOrigin =
-                        location.protocol + "//" + parentUrl;
+                        (CONFIG.protocol || location.protocol) +
+                        "//" +
+                        parentUrl;
                     }
                     console.log(
                       "CDP Tracker: Parent origin set to",
@@ -461,8 +470,8 @@
 
         // Return common tracking data with enhanced information
         return {
-          // Basic tracking info
-          trackerId: CONFIG.trackerId,
+          // Basic tracking infoevent
+          // trackerId: CONFIG.trackerId,
           visitorId: SESSION.visitorId,
           sessionId: SESSION.sessionId,
           fingerprint: SESSION.fingerprint,
@@ -859,7 +868,7 @@
       // Send tracking data to CDP API
       function sendTrackingData(endpoint, data) {
         // Determine protocol to use (use same protocol as current page)
-        var protocol = location.protocol;
+        var protocol = CONFIG.protocol || location.protocol;
 
         // Log the request details
         console.log(
@@ -871,9 +880,7 @@
         // Send data to CDP API
         fetch(protocol + "//" + CONFIG.apiDomain + endpoint, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: CONFIG.header,
           body: JSON.stringify(data),
           mode: "cors",
           credentials: "omit",
@@ -920,7 +927,7 @@
           referrer: eventData.referrer || "",
         });
 
-        sendTrackingData("/track/view", trackingData);
+        sendTrackingData(CONFIG.endpoint, trackingData);
       }
 
       // Process action events
@@ -935,7 +942,7 @@
           referrer: eventData.referrer || "",
         });
 
-        sendTrackingData("/track/action", trackingData);
+        sendTrackingData(CONFIG.endpoint, trackingData);
       }
 
       // Process conversion events
@@ -956,7 +963,7 @@
           },
         });
 
-        sendTrackingData("/track/conversion", trackingData);
+        sendTrackingData(CONFIG.endpoint, trackingData);
       }
 
       // Process feedback events
@@ -971,7 +978,7 @@
           referrer: eventData.referrer || "",
         });
 
-        sendTrackingData("/track/feedback", trackingData);
+        sendTrackingData(CONFIG.endpoint, trackingData);
       }
 
       // Process profile updates
@@ -985,7 +992,7 @@
           extData: extData || {},
         });
 
-        sendTrackingData("/profile/update", trackingData);
+        sendTrackingData(CONFIG.endpoint, trackingData);
       }
 
       // Send message to parent window
@@ -1057,7 +1064,7 @@
               case "action":
                 processActionEvent(eventName, eventData);
                 break;
-              case "conversion":
+              case "purchase":
                 processConversionEvent(
                   eventName,
                   eventData,

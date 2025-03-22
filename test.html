@@ -130,7 +130,7 @@
     </div>
 
     <!-- Client Integration Code - Nhúng trực tiếp vào trang -->
-    <script>
+    <!-- <script>
       // Configuration
       window.cdpTrackerId = "TEST_TRACKER_ID1";
       window.cdpTrackerCdnDomain = "localhost:3000";
@@ -553,6 +553,362 @@
           }
         }, 1000); // Đợi 1 giây để đảm bảo script đã load xong
       });
+    </script> -->
+    <script>
+      // Configuration
+      window.cdpTrackerCdnDomain = "localhost:3000";
+      window.cdpTrackerApiDomain = "https://di-dev.dragoncdp.com";
+      window.cdpTrackerEndpoint = "api/event/save";
+      window.cdpTrackerHeader = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        TOKB5AxnZUBAABBZqbEUSoE7IYHqreCqjjv7AOz0lXx4av2CrABufMAsACC:
+          "TOVA5ExnZUBAADyiNsJL2u2ulbw5hPbAyaxiUmCWCvGQ7fIB7ei3G6RTiEoN0nyoSaIumgbnicbB3bSeJLSs2wd2uLAqEAVnpE0",
+      };
+
+      // Metadata about the current page
+      window.cdpPageTitle = encodeURIComponent(document.title);
+      window.cdpPageUrl = encodeURIComponent(location.href);
+
+      // Helper function to parse UTM parameters
+      window.parseUtmParams = function () {
+        if (location.search.indexOf("utm_") > 0) {
+          var search = location.search.substring(1);
+          var json = decodeURI(search)
+            .replace(/"/g, '"')
+            .replace(/&/g, '","')
+            .replace(/=/g, '":"');
+          return JSON.parse('{"' + json + '"}');
+        }
+        return {};
+      };
+
+      // Function to load the CDP tracker script from CDN
+      function initializeTracking() {
+        // Create and load the script
+        const script = document.createElement("script");
+        script.id = "cdp-script";
+        script.src = "http://localhost:3000/cdp-tracker.js";
+        script.async = true;
+        document.body.appendChild(script);
+      }
+
+      // Initialize tracking on page load
+      window.addEventListener("load", initializeTracking);
+      // Track page view automatically when script loads
+      window.addEventListener("load", function () {
+        setTimeout(function () {
+          if (window.CDP) {
+            window.CDP.trackView("page_view", window.parseUtmParams());
+          }
+        }, 1000);
+      });
+
+      var cdpTracker = {};
+
+      // Track page-view
+      cdpTracker["page-view"] = function (eventData, data) {
+        if (window.CDP) {
+          window.CDP.trackPurchase("page-view", eventData, {
+            purchase: {
+              transactionId:
+                typeof data.purchase.transactionId === "string"
+                  ? data.purchase.transactionId
+                  : "",
+              value:
+                typeof data.purchase.value === "number"
+                  ? data.purchase.value
+                  : 0,
+              currency:
+                typeof data.purchase.currency === "string"
+                  ? data.purchase.currency
+                  : "",
+              status:
+                typeof data.purchase.status === "string"
+                  ? data.purchase.status
+                  : "",
+              timestamp:
+                typeof data.purchase.timestamp === "number"
+                  ? data.purchase.timestamp
+                  : 0,
+              store:
+                typeof data.purchase.store === "object"
+                  ? data.purchase.store
+                  : {},
+              customer:
+                typeof data.purchase.customer === "object"
+                  ? data.purchase.customer
+                  : {},
+              payment:
+                typeof data.purchase.payment === "object"
+                  ? data.purchase.payment
+                  : {},
+              discount:
+                typeof data.purchase.discount === "object"
+                  ? data.purchase.discount
+                  : {},
+              items:
+                typeof data.purchase.items === "object"
+                  ? data.purchase.items
+                  : [],
+            },
+            product: typeof data.product === "object" ? data.product : [],
+          });
+        }
+      };
+
+      // Example:
+      document
+        .getElementById("track-page-view")
+        .addEventListener("click", function () {
+          cdpTracker["page-view"](
+            { payment_method: "credit_card" },
+            {
+              purchase: {
+                transactionId: "TXN-20250303-0001",
+                value: 500.75,
+                currency: "USD",
+                status: "Completed",
+                timestamp: "2025-03-03T04:36:02.955Z",
+                store: {
+                  id: "STORE-001",
+                  name: "Example Store",
+                  branch: "Downtown",
+                  location: {
+                    country: "USA",
+                    state: "California",
+                    city: "San Francisco",
+                    address: "123 Market Street",
+                  },
+                },
+                customer: {
+                  id: "CUST-123456",
+                  email: "john.doe@example.com",
+                  phone: "+84901234567",
+                  firstName: "John",
+                  lastName: "Doe",
+                  type: "VIP",
+                  segment: "High-Value",
+                  membershipId: "MEM-98765",
+                  isNewCustomer: false,
+                },
+                payment: {
+                  method: "Credit Card",
+                  gateway: "Stripe",
+                  installments: 3,
+                  status: "Paid",
+                  cardType: "Visa",
+                  last4: "4242",
+                },
+                discount: {
+                  total: 50.75,
+                  code: "SPRINGSALE2025",
+                  type: "Percentage",
+                  campaign: "Spring Sale",
+                },
+                items: [
+                  {
+                    id: "PROD-001",
+                    sku: "SKU-12345",
+                    name: "Wireless Headphones",
+                    category: "Electronics",
+                    subcategory: "Audio",
+                    brand: "Sony",
+                    variant: "Black",
+                    price: 200.0,
+                    originalPrice: 250.0,
+                    quantity: 2,
+                    currency: "USD",
+                    discount: {
+                      amount: 25.0,
+                      type: "Fixed",
+                    },
+                  },
+                  {
+                    id: "PROD-002",
+                    sku: "SKU-54321",
+                    name: "Smart Watch",
+                    category: "Wearables",
+                    subcategory: "Watches",
+                    brand: "Apple",
+                    variant: "Silver",
+                    price: 300.75,
+                    originalPrice: 350.75,
+                    quantity: 1,
+                    currency: "USD",
+                    discount: {
+                      amount: 25.0,
+                      type: "Fixed",
+                    },
+                  },
+                ],
+              },
+
+              product: [
+                {
+                  id: "string",
+                  sku: "string",
+                  name: "string",
+                  category: "string",
+                  subcategory: "string",
+                  brand: "string",
+                  variant: "string",
+                  price: 0,
+                  originalPrice: 0,
+                  quantity: 0,
+                  currency: "string",
+                  discount: {
+                    amount: 0,
+                    type: "string",
+                  },
+                },
+              ],
+            }
+          );
+        });
+
+      // Track add-to-cart
+      cdpTracker["add-to-cart"] = function (
+        eventData,
+        transactionId,
+        value,
+        currency,
+        status,
+        timestamp,
+        store,
+        customer,
+        payment,
+        discount,
+        items,
+        product
+      ) {
+        if (window.CDP) {
+          window.CDP.trackPurchase("add-to-cart", eventData, {
+            purchase: {
+              transactionId:
+                typeof transactionId === "string" ? transactionId : "",
+              value: typeof value === "number" ? value : 0,
+              currency: typeof currency === "string" ? currency : "",
+              status: typeof status === "string" ? status : "",
+              timestamp: typeof timestamp === "number" ? timestamp : 0,
+              store: typeof store === "object" ? store : {},
+              customer: typeof customer === "object" ? customer : {},
+              payment: typeof payment === "object" ? payment : {},
+              discount: typeof discount === "object" ? discount : {},
+              items: typeof items === "object" ? items : [],
+            },
+            product: typeof product === "object" ? product : [],
+          });
+        }
+      };
+
+      // Example:
+      // cdpTracker["add-to-cart"]({ payment_method: "credit_card" },
+      // {
+      //   purchase: {
+      //     transactionId: "TXN-20250303-0001",
+      //     value: 500.75,
+      //     currency: "USD",
+      //     status: "Completed",
+      //     timestamp: "2025-03-03T04:36:02.955Z",
+      //     store: {
+      //       id: "STORE-001",
+      //       name: "Example Store",
+      //       branch: "Downtown",
+      //       location: {
+      //         country: "USA",
+      //         state: "California",
+      //         city: "San Francisco",
+      //         address: "123 Market Street",
+      //       },
+      //     },
+      //     customer: {
+      //       id: "CUST-123456",
+      //       email: "john.doe@example.com",
+      //       phone: "+84901234567",
+      //       firstName: "John",
+      //       lastName: "Doe",
+      //       type: "VIP",
+      //       segment: "High-Value",
+      //       membershipId: "MEM-98765",
+      //       isNewCustomer: false,
+      //     },
+      //     payment: {
+      //       method: "Credit Card",
+      //       gateway: "Stripe",
+      //       installments: 3,
+      //       status: "Paid",
+      //       cardType: "Visa",
+      //       last4: "4242",
+      //     },
+      //     discount: {
+      //       total: 50.75,
+      //       code: "SPRINGSALE2025",
+      //       type: "Percentage",
+      //       campaign: "Spring Sale",
+      //     },
+      //     items: [
+      //       {
+      //         id: "PROD-001",
+      //         sku: "SKU-12345",
+      //         name: "Wireless Headphones",
+      //         category: "Electronics",
+      //         subcategory: "Audio",
+      //         brand: "Sony",
+      //         variant: "Black",
+      //         price: 200.0,
+      //         originalPrice: 250.0,
+      //         quantity: 2,
+      //         currency: "USD",
+      //         discount: {
+      //           amount: 25.0,
+      //           type: "Fixed",
+      //         },
+      //       },
+      //       {
+      //         id: "PROD-002",
+      //         sku: "SKU-54321",
+      //         name: "Smart Watch",
+      //         category: "Wearables",
+      //         subcategory: "Watches",
+      //         brand: "Apple",
+      //         variant: "Silver",
+      //         price: 300.75,
+      //         originalPrice: 350.75,
+      //         quantity: 1,
+      //         currency: "USD",
+      //         discount: {
+      //           amount: 25.0,
+      //           type: "Fixed",
+      //         },
+      //       },
+      //     ],
+      //   }
+      // } ,
+
+      // product:
+      // {
+      //   [
+      //     {
+      //       "id": "string",
+      //       "sku": "string",
+      //       "name": "string",
+      //       "category": "string",
+      //       "subcategory": "string",
+      //       "brand": "string",
+      //       "variant": "string",
+      //       "price": 0,
+      //       "originalPrice": 0,
+      //       "quantity": 0,
+      //       "currency": "string",
+      //       "discount": {
+      //         "amount": 0,
+      //         "type": "string"
+      //       }
+      //     }
+      //   ]
+      // }
+      //);
     </script>
   </body>
 </html>

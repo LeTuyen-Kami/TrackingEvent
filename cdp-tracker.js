@@ -13,11 +13,14 @@
   }
 
   // Get configuration from the parent page
-  var trackerId = window.cdpTrackerId;
+  var trackerId = window.cdpTrackerId || "12";
   var cdnDomain = window.cdpTrackerCdnDomain || "cdn.cdpdomain.com";
   var apiDomain = window.cdpTrackerApiDomain || "api.cdpdomain.com";
-  var currentPageUrl = location.protocol + "//" + location.host;
+  var endpoint = window.cdpTrackerEndpoint || "/track/view";
+  var header = window.cdpTrackerHeader;
 
+  var currentPageUrl = location.protocol + "//" + location.host;
+  var protocol = "https";
   // Create the tracker object
   var cdpTracker = {
     iframe: null,
@@ -41,6 +44,9 @@
         trackerId: trackerId,
         parentOrigin: currentPageOrigin,
         apiDomain: apiDomain,
+        protocol: protocol,
+        endpoint: endpoint,
+        header: header,
       };
 
       // Encode the config as JSON and add to hash
@@ -201,7 +207,7 @@
     // Add extra parameters based on event type
     var event = Object.assign({}, commonData);
 
-    if (eventType === "conversion" && extraParams) {
+    if (eventType === "purchase" && extraParams) {
       // Use the new purchaseInfo object structure
       event.purchaseInfo = extraParams.purchaseInfo || {
         transactionId: "",
@@ -229,8 +235,8 @@
     this.processEvent("action", eventName, eventData);
   };
 
-  // Track conversion events
-  cdpTracker.trackConversion = function (eventName, eventData, purchaseInfo) {
+  // Track purchase events
+  cdpTracker.trackPurchase = function (eventName, eventData, purchaseInfo) {
     var extraParams = {
       purchaseInfo: purchaseInfo || {
         transactionId: "",
@@ -240,7 +246,7 @@
         items: [],
       },
     };
-    this.processEvent("conversion", eventName, eventData, extraParams);
+    this.processEvent("purchase", eventName, eventData, extraParams);
   };
 
   // Track feedback events
@@ -273,8 +279,8 @@
     trackAction: function (eventName, eventData) {
       cdpTracker.trackAction(eventName, eventData);
     },
-    trackConversion: function (eventName, eventData, purchaseInfo) {
-      cdpTracker.trackConversion(eventName, eventData, purchaseInfo);
+    trackPurchase: function (eventName, eventData, purchaseInfo) {
+      cdpTracker.trackPurchase(eventName, eventData, purchaseInfo);
     },
     trackFeedback: function (eventName, eventData) {
       cdpTracker.trackFeedback(eventName, eventData);
