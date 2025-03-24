@@ -94,10 +94,10 @@
     window.addEventListener(
       "message",
       function (event) {
-        // Verify the message origin
-        if (cdpTracker.allowedOrigins.indexOf(event.origin) === -1) {
-          return;
-        }
+        // // Verify the message origin
+        // if (cdpTracker.allowedOrigins.indexOf(event.origin) === -1) {
+        //   return;
+        // }
 
         // Process messages from the iframe
         try {
