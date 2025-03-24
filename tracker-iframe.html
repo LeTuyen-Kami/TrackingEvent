@@ -873,12 +873,12 @@
         // Log the request details
         console.log(
           "Sending tracking data to:",
-          protocol + "//" + CONFIG.apiDomain + endpoint
+          protocol + "://" + CONFIG.apiDomain + endpoint
         );
         console.log("Data:", data);
 
         // Send data to CDP API
-        fetch(protocol + "//" + CONFIG.apiDomain + endpoint, {
+        fetch(protocol + "://" + CONFIG.apiDomain + endpoint, {
           method: "POST",
           headers: CONFIG.header,
           body: JSON.stringify(data),
