@@ -556,7 +556,8 @@
     </script> -->
     <script>
       // Configuration
-      window.cdpTrackerCdnDomain = "localhost:3000";
+      window.cdpTrackerCdnDomain =
+        "cdn.jsdelivr.net/gh/LeTuyen-Kami/TrackingEvent@main";
       window.cdpTrackerApiDomain = "https://di-dev.dragoncdp.com";
       window.cdpTrackerEndpoint = "api/event/save";
       window.cdpTrackerHeader = {
@@ -588,7 +589,8 @@
         // Create and load the script
         const script = document.createElement("script");
         script.id = "cdp-script";
-        script.src = "http://localhost:3000/cdp-tracker.js";
+        script.src =
+          "https://cdn.jsdelivr.net/gh/LeTuyen-Kami/TrackingEvent@main/cdp-tracker.js";
         script.async = true;
         document.body.appendChild(script);
       }
@@ -661,6 +663,8 @@
       document
         .getElementById("track-page-view")
         .addEventListener("click", function () {
+          console.log("click", window);
+
           cdpTracker["page-view"](
             { payment_method: "credit_card" },
             {

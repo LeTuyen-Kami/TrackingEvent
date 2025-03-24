@@ -148,9 +148,7 @@
         location.hostname === "localhost" || location.hostname === "127.0.0.1";
 
       // Use wildcard origin in development, specific origin in production
-      var targetOrigin = isDevelopment
-        ? "*"
-        : location.protocol + "//" + cdnDomain;
+      var targetOrigin = "*";
 
       console.log("Sending message to iframe with targetOrigin:", targetOrigin);
       this.iframe.contentWindow.postMessage(message, targetOrigin);
