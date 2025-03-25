@@ -1015,38 +1015,17 @@
 
       // Send message to parent window
       function sendToParent(message) {
-        if (
-          CONFIG.parentOrigin &&
-          CONFIG.parentOrigin !== "TRACKER" &&
-          CONFIG.parentOrigin !== ""
-        ) {
-          try {
-            window.parent.postMessage(message, CONFIG.parentOrigin);
-          } catch (e) {
-            console.error("CDP Tracker: Error sending message to parent:", e);
-            // Fallback to wildcard origin in development environment
-            try {
-              window.parent.postMessage(message, "*");
-            } catch (e2) {
-              console.error(
-                "CDP Tracker: Error sending message with wildcard origin:",
-                e2
-              );
-            }
-          }
-        } else {
-          console.warn(
-            "CDP Tracker: Invalid parent origin:",
-            CONFIG.parentOrigin
-          );
-          // Use wildcard origin in development environment
+        try {
+          window.parent.postMessage(message, "*");
+        } catch (e) {
+          console.error("CDP Tracker: Error sending message to parent:", e);
+          // Fallback to wildcard origin in development environment
           try {
             window.parent.postMessage(message, "*");
-            console.log("CDP Tracker: Using wildcard origin as fallback");
-          } catch (e) {
+          } catch (e2) {
             console.error(
               "CDP Tracker: Error sending message with wildcard origin:",
-              e
+              e2
             );
           }
         }
