@@ -219,6 +219,8 @@
       event.extData = extraParams.extData || {};
     }
 
+    console.log("processEvent", event);
+
     // Send to iframe
     this.sendToIframe(event);
   };
