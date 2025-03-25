@@ -28,6 +28,11 @@
 
       // Parse configuration from URL hash
       function parseConfig() {
+        sendToParent({
+          type: "parse-config",
+          config: CONFIG,
+        });
+
         if (location.hash && location.hash.length > 1) {
           try {
             // Lấy toàn bộ hash và giải mã
