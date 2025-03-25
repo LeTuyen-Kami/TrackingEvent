@@ -11,7 +11,7 @@
        * 3. Sending tracking data to the CDP API
        * 4. Maintaining security by validating message origins
        */
-
+      //v6
       // Configuration variables
       var CONFIG = {
         trackerId: "",
@@ -46,29 +46,7 @@
                 CONFIG.endpoint = config.endpoint || "";
                 CONFIG.protocol = config.protocol || "";
                 CONFIG.header = config.header || {};
-                // Xử lý parentOrigin
-                if (config.parentOrigin === "*") {
-                  CONFIG.parentOrigin = "*";
-                  console.warn(
-                    "CDP Tracker: Using wildcard origin is not recommended for production"
-                  );
-                } else if (config.parentOrigin) {
-                  try {
-                    var url = new URL(config.parentOrigin);
-                    CONFIG.parentOrigin = url.origin;
-                    console.log(
-                      "CDP Tracker: Parent origin set to",
-                      CONFIG.parentOrigin
-                    );
-                  } catch (e) {
-                    console.error(
-                      "CDP Tracker: Invalid parent URL in config:",
-                      config.parentOrigin
-                    );
-                    // Fallback to wildcard in development
-                    CONFIG.parentOrigin = "*";
-                  }
-                }
+                console.log("DONE");
 
                 return; // Đã xử lý xong cấu hình JSON
               }
