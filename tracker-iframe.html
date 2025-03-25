@@ -966,6 +966,8 @@
           eventData = JSON.stringify(eventData);
         }
 
+        console.log("purchaseInfo", purchaseInfo);
+
         var trackingData = Object.assign({}, commonData, {
           eventType: "conversion",
           eventName: eventName,
@@ -1065,18 +1067,6 @@
 
       // Handle messages from parent window
       function handleMessage(event) {
-        // Validate origin if not using wildcard
-        if (
-          CONFIG.parentOrigin !== "*" &&
-          event.origin !== CONFIG.parentOrigin
-        ) {
-          console.error(
-            "CDP Tracker: Message from unauthorized origin:",
-            event.origin
-          );
-          return;
-        }
-
         // Process message
         try {
           var message = event.data;
@@ -1122,7 +1112,7 @@
         parseConfig();
 
         // Set up message listener
-        // window.addEventListener("message", handleMessage, false);
+        window.addEventListener("message", handleMessage, false);
 
         // Load thumbmarkjs and initialize visitor
         loadThumbmarkJs(function () {

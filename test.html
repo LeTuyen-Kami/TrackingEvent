@@ -557,13 +557,15 @@
     <script>
       // Configuration
       window.cdpTrackerCdnDomain = "localhost:3000";
-      window.cdpTrackerApiDomain = "localhost:3000";
+      window.cdpTrackerApiDomain = "di-dev.dragoncdp.com";
       window.cdpTrackerEndpoint = "/api/event/save";
       window.cdpTrackerHeader = {
         "Content-Type": "application/json",
         Accept: "application/json",
-        TOKB5AxnZUBAABBZqbEUSoE7IYHqreCqjjv7AOz0lXx4av2CrABufMAsACC:
-          "TOVA5ExnZUBAADyiNsJL2u2ulbw5hPbAyaxiUmCWCvGQ7fIB7ei3G6RTiEoN0nyoSaIumgbnicbB3bSeJLSs2wd2uLAqEAVnpE0",
+        "token-key":
+          "TOKn4AympUBAADlnirs0NLC1rpm2tJviNhOciaQPoqZ6HzIzSP2mL0INQCC",
+        "token-value":
+          "TOVn4AympUBAADnmKaeYUN2UpuyQ8WqM5CodqT7wPwh9MNB4bBaP7nOU0B37mwEmHtYs17OdKl7ShE3qMRPGTKl4BhjtBj8Iutr",
       };
 
       // Metadata about the current page
@@ -588,8 +590,7 @@
         // Create and load the script
         const script = document.createElement("script");
         script.id = "cdp-script";
-        script.src =
-          "https://cdn.jsdelivr.net/gh/LeTuyen-Kami/TrackingEvent@v2.0/cdp-tracker.js";
+        script.src = "http://localhost:3000/cdp-tracker.js";
         script.async = true;
         document.body.appendChild(script);
       }
