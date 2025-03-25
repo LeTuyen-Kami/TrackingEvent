@@ -46,7 +46,11 @@
                 CONFIG.endpoint = config.endpoint || "";
                 CONFIG.protocol = config.protocol || "";
                 CONFIG.header = config.header || {};
-                console.log("DONE");
+
+                sendToParent({
+                  type: "parse-config",
+                  config: config,
+                });
 
                 return; // Đã xử lý xong cấu hình JSON
               }

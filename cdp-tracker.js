@@ -103,6 +103,8 @@
         try {
           var message = event.data;
 
+          console.log("message", message);
+
           if (message === "CDP_TRACKER_READY") {
             cdpTracker.iframeLoaded = true;
             cdpTracker.processQueue();
