@@ -557,7 +557,7 @@
     <script>
       // Configuration
       window.cdpTrackerCdnDomain = "localhost:3000";
-      window.cdpTrackerApiDomain = "di-dev.dragoncdp.com";
+      window.cdpTrackerApiDomain = "localhost:3000";
       window.cdpTrackerEndpoint = "/api/event/save";
       window.cdpTrackerHeader = {
         "Content-Type": "application/json",
@@ -588,7 +588,8 @@
         // Create and load the script
         const script = document.createElement("script");
         script.id = "cdp-script";
-        script.src = "http://localhost:3000/cdp-tracker.js";
+        script.src =
+          "https://cdn.jsdelivr.net/gh/LeTuyen-Kami/TrackingEvent@v2.0/cdp-tracker.js";
         script.async = true;
         document.body.appendChild(script);
       }
@@ -610,6 +611,7 @@
       cdpTracker["page-view"] = function (eventData, data) {
         if (window.CDP) {
           window.CDP.trackPurchase("page-view", eventData, {
+            customer: typeof data.customer === "object" ? data.customer : {},
             purchase: {
               transactionId:
                 typeof data.purchase.transactionId === "string"
@@ -666,6 +668,10 @@
           cdpTracker["page-view"](
             { payment_method: "credit_card" },
             {
+              customer: {
+                email: "test@example.com",
+                phone: "+84901234567",
+              },
               purchase: {
                 transactionId: "TXN-20250303-0001",
                 value: 500.75,

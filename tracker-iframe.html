@@ -866,7 +866,7 @@
       }
 
       // Send tracking data to CDP API
-      function sendTrackingData(endpoint, data) {
+      function sendTrackingData(endpoint, data, from) {
         // Determine protocol to use (use same protocol as current page)
         var protocol = CONFIG.protocol || location.protocol;
 
@@ -876,7 +876,7 @@
           protocol + "://" + CONFIG.apiDomain + endpoint
         );
         console.log("Data:", data);
-
+        console.log("From:", from);
         // Send data to CDP API
         fetch(protocol + "://" + CONFIG.apiDomain + endpoint, {
           method: "POST",
@@ -920,14 +920,19 @@
         var commonData = prepareCommonTrackingData();
         if (!commonData) return;
 
+        if (!eventData || Object.keys(eventData).length === 0) {
+          eventData = null;
+        } else {
+          eventData = JSON.stringify(eventData);
+        }
+
         var trackingData = Object.assign({}, commonData, {
           eventType: "view",
           eventName: eventName,
           eventData: eventData,
-          referrer: eventData.referrer || "",
         });
 
-        sendTrackingData(CONFIG.endpoint, trackingData);
+        sendTrackingData(CONFIG.endpoint, trackingData, "view");
       }
 
       // Process action events
@@ -935,14 +940,19 @@
         var commonData = prepareCommonTrackingData();
         if (!commonData) return;
 
+        if (!eventData || Object.keys(eventData).length === 0) {
+          eventData = null;
+        } else {
+          eventData = JSON.stringify(eventData);
+        }
+
         var trackingData = Object.assign({}, commonData, {
           eventType: "action",
           eventName: eventName,
           eventData: eventData,
-          referrer: eventData.referrer || "",
         });
 
-        sendTrackingData(CONFIG.endpoint, trackingData);
+        sendTrackingData(CONFIG.endpoint, trackingData, "action");
       }
 
       // Process conversion events
@@ -950,10 +960,18 @@
         var commonData = prepareCommonTrackingData();
         if (!commonData) return;
 
+        if (!eventData || Object.keys(eventData).length === 0) {
+          eventData = null;
+        } else {
+          eventData = JSON.stringify(eventData);
+        }
+
         var trackingData = Object.assign({}, commonData, {
           eventType: "conversion",
           eventName: eventName,
           eventData: eventData,
+          privateEmail: purchaseInfo.customer.email,
+          privatePhone: purchaseInfo.customer.phone,
           purchaseInfo: purchaseInfo || {
             transactionId: "",
             value: 0,
@@ -963,7 +981,7 @@
           },
         });
 
-        sendTrackingData(CONFIG.endpoint, trackingData);
+        sendTrackingData(CONFIG.endpoint, trackingData, "conversion");
       }
 
       // Process feedback events
@@ -971,14 +989,19 @@
         var commonData = prepareCommonTrackingData();
         if (!commonData) return;
 
+        if (!eventData || Object.keys(eventData).length === 0) {
+          eventData = null;
+        } else {
+          eventData = JSON.stringify(eventData);
+        }
+
         var trackingData = Object.assign({}, commonData, {
           eventType: "feedback",
           eventName: eventName,
           eventData: eventData,
-          referrer: eventData.referrer || "",
         });
 
-        sendTrackingData(CONFIG.endpoint, trackingData);
+        sendTrackingData(CONFIG.endpoint, trackingData, "feedback");
       }
 
       // Process profile updates
@@ -986,13 +1009,19 @@
         var commonData = prepareCommonTrackingData();
         if (!commonData) return;
 
+        if (!profileData || Object.keys(profileData).length === 0) {
+          profileData = null;
+        } else {
+          profileData = JSON.stringify(profileData);
+        }
+
         var trackingData = Object.assign({}, commonData, {
           eventType: "profile",
           profileData: profileData || {},
           extData: extData || {},
         });
 
-        sendTrackingData(CONFIG.endpoint, trackingData);
+        sendTrackingData(CONFIG.endpoint, trackingData, "profile");
       }
 
       // Send message to parent window
@@ -1093,7 +1122,7 @@
         parseConfig();
 
         // Set up message listener
-        window.addEventListener("message", handleMessage, false);
+        // window.addEventListener("message", handleMessage, false);
 
         // Load thumbmarkjs and initialize visitor
         loadThumbmarkJs(function () {
