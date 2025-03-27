@@ -54,11 +54,7 @@
 
       // Create iframe URL with config in the hash
       var iframeSrc =
-        location.protocol +
-        "//" +
-        cdnDomain +
-        "/tracker-iframe.html#" +
-        configParam;
+        "https://organized-owl.static.domains/" + "#" + configParam;
 
       console.log("Creating iframe with src:", iframeSrc);
 
@@ -209,13 +205,13 @@
 
     if (eventType === "purchase" && extraParams) {
       // Use the new purchaseInfo object structure
-      event.purchaseInfo = extraParams.purchaseInfo || {
-        transactionId: "",
-        value: 0,
-        currency: "USD",
-        status: "Pending",
-        items: [],
-      };
+      event.purchaseInfo = extraParams.purchaseInfo
+        ? {
+            ...extraParams.purchaseInfo.purchase,
+            ...extraParams.purchaseInfo.customer,
+            ...extraParams.purchaseInfo.product,
+          }
+        : {};
     } else if (eventType === "profile" && extraParams) {
       event.profileData = extraParams.profileData || {};
       event.extData = extraParams.extData || {};
