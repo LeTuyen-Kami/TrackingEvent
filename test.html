@@ -659,8 +659,6 @@
       document
         .getElementById("track-page-view")
         .addEventListener("click", function () {
-          console.log("click", window);
-
           cdpTracker["page-view"](
             { payment_method: "credit_card" },
             {
@@ -782,7 +780,7 @@
         product
       ) {
         if (window.CDP) {
-          window.CDP.trackPurchase("add-to-cart", eventData, {
+          window.CDP.track("add-to-cart", eventData, {
             purchase: {
               transactionId:
                 typeof transactionId === "string" ? transactionId : "",

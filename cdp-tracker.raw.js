@@ -13,19 +13,18 @@
   }
 
   // Get configuration from the parent page
-  var trackerId = window.cdpTrackerId;
+  var trackerId = window.cdpTrackerId || "12";
   var cdnDomain = window.cdpTrackerCdnDomain || "cdn.cdpdomain.com";
   var apiDomain = window.cdpTrackerApiDomain || "api.cdpdomain.com";
-  var currentPageUrl = location.protocol + "//" + location.host;
+  var endpoint = window.cdpTrackerEndpoint || "/track/view";
+  var header = window.cdpTrackerHeader;
 
+  var currentPageUrl = location.protocol + "//" + location.host;
+  var protocol = "https";
   // Create the tracker object
   var cdpTracker = {
     iframe: null,
     iframeLoaded: false,
-    allowedOrigins: [
-      location.protocol + "//" + cdnDomain,
-      location.protocol + "//" + apiDomain,
-    ],
     messageQueue: [],
   };
 
@@ -41,18 +40,16 @@
         trackerId: trackerId,
         parentOrigin: currentPageOrigin,
         apiDomain: apiDomain,
+        protocol: protocol,
+        endpoint: endpoint,
+        header: header,
       };
 
       // Encode the config as JSON and add to hash
       var configParam = encodeURIComponent(JSON.stringify(iframeConfig));
 
       // Create iframe URL with config in the hash
-      var iframeSrc =
-        location.protocol +
-        "//" +
-        cdnDomain +
-        "/tracker-iframe.html#" +
-        configParam;
+      var iframeSrc = "https://container-dev.dragoncdp.com/#" + configParam;
 
       console.log("Creating iframe with src:", iframeSrc);
 
@@ -88,14 +85,10 @@
     window.addEventListener(
       "message",
       function (event) {
-        // Verify the message origin
-        if (cdpTracker.allowedOrigins.indexOf(event.origin) === -1) {
-          return;
-        }
-
-        // Process messages from the iframe
         try {
           var message = event.data;
+
+          console.log("message", message);
 
           if (message === "CDP_TRACKER_READY") {
             cdpTracker.iframeLoaded = true;
@@ -142,9 +135,7 @@
         location.hostname === "localhost" || location.hostname === "127.0.0.1";
 
       // Use wildcard origin in development, specific origin in production
-      var targetOrigin = isDevelopment
-        ? "*"
-        : location.protocol + "//" + cdnDomain;
+      var targetOrigin = "*";
 
       console.log("Sending message to iframe with targetOrigin:", targetOrigin);
       this.iframe.contentWindow.postMessage(message, targetOrigin);
@@ -201,15 +192,21 @@
     // Add extra parameters based on event type
     var event = Object.assign({}, commonData);
 
-    if (eventType === "conversion" && extraParams) {
-      event.transactionId = extraParams.transactionId || "";
-      event.items = extraParams.items || [];
-      event.value = extraParams.value || 0;
-      event.currency = extraParams.currency || "USD";
+    if (eventType === "purchase" && extraParams) {
+      // Use the new purchaseInfo object structure
+      event.purchaseInfo = extraParams.purchaseInfo
+        ? {
+            ...extraParams.purchaseInfo.purchase,
+          }
+        : {};
+
+      console.log("purchaseInfo", event.purchaseInfo);
     } else if (eventType === "profile" && extraParams) {
       event.profileData = extraParams.profileData || {};
       event.extData = extraParams.extData || {};
     }
+
+    console.log("processEvent", event);
 
     // Send to iframe
     this.sendToIframe(event);
@@ -225,22 +222,18 @@
     this.processEvent("action", eventName, eventData);
   };
 
-  // Track conversion events
-  cdpTracker.trackConversion = function (
-    eventName,
-    eventData,
-    transactionId,
-    items,
-    value,
-    currency
-  ) {
+  // Track purchase events
+  cdpTracker.trackPurchase = function (eventName, eventData, purchaseInfo) {
     var extraParams = {
-      transactionId: transactionId || "",
-      items: items || [],
-      value: value || 0,
-      currency: currency || "USD",
+      purchaseInfo: purchaseInfo || {
+        transactionId: "",
+        value: 0,
+        currency: "USD",
+        status: "Pending",
+        items: [],
+      },
     };
-    this.processEvent("conversion", eventName, eventData, extraParams);
+    this.processEvent("purchase", eventName, eventData, extraParams);
   };
 
   // Track feedback events
@@ -273,28 +266,17 @@
     trackAction: function (eventName, eventData) {
       cdpTracker.trackAction(eventName, eventData);
     },
-    trackConversion: function (
-      eventName,
-      eventData,
-      transactionId,
-      items,
-      value,
-      currency
-    ) {
-      cdpTracker.trackConversion(
-        eventName,
-        eventData,
-        transactionId,
-        items,
-        value,
-        currency
-      );
+    trackPurchase: function (eventName, eventData, purchaseInfo) {
+      cdpTracker.trackPurchase(eventName, eventData, purchaseInfo);
     },
     trackFeedback: function (eventName, eventData) {
       cdpTracker.trackFeedback(eventName, eventData);
     },
     updateProfile: function (profileData, extData) {
       cdpTracker.updateProfile(profileData, extData);
+    },
+    track: function (eventName, eventData, purchaseInfo) {
+      cdpTracker.trackPurchase(eventName, eventData, purchaseInfo);
     },
   };
 
