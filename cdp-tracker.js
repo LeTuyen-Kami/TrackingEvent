@@ -25,10 +25,6 @@
   var cdpTracker = {
     iframe: null,
     iframeLoaded: false,
-    allowedOrigins: [
-      location.protocol + "//" + cdnDomain,
-      location.protocol + "//" + apiDomain,
-    ],
     messageQueue: [],
   };
 
@@ -53,8 +49,9 @@
       var configParam = encodeURIComponent(JSON.stringify(iframeConfig));
 
       // Create iframe URL with config in the hash
+      // var iframeSrc = "https://container-dev.dragoncdp.com/#" + configParam;
       var iframeSrc =
-        "https://organized-owl.static.domains/" + "#" + configParam;
+        "http://localhost:3000/tracker-iframe.html#" + configParam;
 
       console.log("Creating iframe with src:", iframeSrc);
 
@@ -90,12 +87,6 @@
     window.addEventListener(
       "message",
       function (event) {
-        // // Verify the message origin
-        // if (cdpTracker.allowedOrigins.indexOf(event.origin) === -1) {
-        //   return;
-        // }
-
-        // Process messages from the iframe
         try {
           var message = event.data;
 
@@ -208,10 +199,10 @@
       event.purchaseInfo = extraParams.purchaseInfo
         ? {
             ...extraParams.purchaseInfo.purchase,
-            ...extraParams.purchaseInfo.customer,
-            ...extraParams.purchaseInfo.product,
           }
         : {};
+
+      console.log("purchaseInfo", event.purchaseInfo);
     } else if (eventType === "profile" && extraParams) {
       event.profileData = extraParams.profileData || {};
       event.extData = extraParams.extData || {};
@@ -285,6 +276,9 @@
     },
     updateProfile: function (profileData, extData) {
       cdpTracker.updateProfile(profileData, extData);
+    },
+    track: function (eventName, eventData, purchaseInfo) {
+      cdpTracker.trackPurchase(eventName, eventData, purchaseInfo);
     },
   };
 

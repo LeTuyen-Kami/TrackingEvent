@@ -557,8 +557,6 @@
     <script>
       // Configuration
       // window.cdpTrackerCdnDomain = "localhost:3000";
-      window.cdpTrackerCdnDomain =
-        "cdn.jsdelivr.net/gh/LeTuyen-Kami/TrackingEvent@v11";
       window.cdpTrackerApiDomain = "di-dev.dragoncdp.com";
       window.cdpTrackerEndpoint = "/api/event/save";
       window.cdpTrackerHeader = {
@@ -613,8 +611,7 @@
       // Track page-view
       cdpTracker["page-view"] = function (eventData, data) {
         if (window.CDP) {
-          window.CDP.trackPurchase("page-view", eventData, {
-            customer: typeof data.customer === "object" ? data.customer : {},
+          window.CDP.track("page-view", eventData, {
             purchase: {
               transactionId:
                 typeof data.purchase.transactionId === "string"
@@ -632,10 +629,6 @@
                 typeof data.purchase.status === "string"
                   ? data.purchase.status
                   : "",
-              timestamp:
-                typeof data.purchase.timestamp === "number"
-                  ? data.purchase.timestamp
-                  : 0,
               store:
                 typeof data.purchase.store === "object"
                   ? data.purchase.store
@@ -671,16 +664,11 @@
           cdpTracker["page-view"](
             { payment_method: "credit_card" },
             {
-              customer: {
-                email: "test@example.com",
-                phone: "+84901234567",
-              },
               purchase: {
                 transactionId: "TXN-20250303-0001",
                 value: 500.75,
                 currency: "USD",
                 status: "Completed",
-                timestamp: "2025-03-03T04:36:02.955Z",
                 store: {
                   id: "STORE-001",
                   name: "Example Store",
@@ -757,20 +745,21 @@
 
               product: [
                 {
-                  id: "string",
-                  sku: "string",
-                  name: "string",
-                  category: "string",
-                  subcategory: "string",
-                  brand: "string",
-                  variant: "string",
-                  price: 0,
-                  originalPrice: 0,
-                  quantity: 0,
-                  currency: "string",
+                  id: "PROD-003",
+                  sku: "SKU-67890",
+                  name: "Bluetooth Speaker",
+                  category: "Electronics",
+                  imageUrl: "https://example.com/images/bluetooth-speaker.jpg",
+                  subcategory: "Audio",
+                  brand: "JBL",
+                  variant: "Blue",
+                  price: 150.0,
+                  originalPrice: 200.0,
+                  quantity: 1,
+                  currency: "USD",
                   discount: {
-                    amount: 0,
-                    type: "string",
+                    amount: 50.0,
+                    type: "Fixed",
                   },
                 },
               ],
@@ -785,7 +774,6 @@
         value,
         currency,
         status,
-        timestamp,
         store,
         customer,
         payment,
@@ -801,7 +789,6 @@
               value: typeof value === "number" ? value : 0,
               currency: typeof currency === "string" ? currency : "",
               status: typeof status === "string" ? status : "",
-              timestamp: typeof timestamp === "number" ? timestamp : 0,
               store: typeof store === "object" ? store : {},
               customer: typeof customer === "object" ? customer : {},
               payment: typeof payment === "object" ? payment : {},
