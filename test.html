@@ -129,432 +129,7 @@
       <div>Event log will appear here...</div>
     </div>
 
-    <!-- Client Integration Code - Nhúng trực tiếp vào trang -->
     <!-- <script>
-      // Configuration
-      window.cdpTrackerId = "TEST_TRACKER_ID1";
-      window.cdpTrackerCdnDomain = "localhost:3000";
-      window.cdpTrackerApiDomain = "localhost:3000";
-
-      // Metadata about the current page
-      window.cdpPageTitle = encodeURIComponent(document.title);
-      window.cdpPageUrl = encodeURIComponent(location.href);
-
-      // Event log function
-      function logEvent(message) {
-        const logElement = document.getElementById("event-log");
-        const timestamp = new Date().toISOString();
-        logElement.innerHTML += `<div>[${timestamp}] ${message}</div>`;
-        logElement.scrollTop = logElement.scrollHeight;
-      }
-
-      // Apply configuration
-      // document
-      //   .getElementById("apply-config")
-      //   .addEventListener("click", function () {
-      //     window.cdpTrackerId = document.getElementById("tracker-id").value;
-      //     window.cdpTrackerCdnDomain =
-      //       document.getElementById("cdn-domain").value;
-      //     window.cdpTrackerApiDomain =
-      //       document.getElementById("api-domain").value;
-
-      //     logEvent(
-      //       `Configuration applied: Tracker ID=${window.cdpTrackerId}, CDN Domain=${window.cdpTrackerCdnDomain}, API Domain=${window.cdpTrackerApiDomain}`
-      //     );
-
-      //     // Reinitialize the tracking system
-      //     initializeTracking();
-      //   });
-
-      //Show Config
-      document.getElementById("tracker-id").value = window.cdpTrackerId;
-      document.getElementById("cdn-domain").value = window.cdpTrackerCdnDomain;
-      document.getElementById("api-domain").value = window.cdpTrackerApiDomain;
-
-      // Client Integration Code - Đây là đoạn code mà người dùng sẽ nhúng vào trang web của họ
-      (function () {
-        // Define internal tracking function that will be available before the script loads
-        // This will queue events until the main script is loaded
-        window._trackEvent =
-          window._trackEvent ||
-          function (eventType, eventName, eventData, extraParams) {
-            window._trackEvent.queue = window._trackEvent.queue || [];
-            window._trackEvent.queue.push({
-              eventType: eventType,
-              eventName: eventName,
-              eventData: eventData || {},
-              extraParams: extraParams || {},
-              timestamp: new Date().getTime(),
-            });
-          };
-
-        // Define the CDP global object with specific tracking methods
-        window.CDP = window.CDP || {
-          // Track view events (pageviews, content impressions)
-          trackView: function (eventName, eventData) {
-            window._trackEvent("view", eventName, eventData);
-          },
-
-          // Track action events (clicks, form submissions, user interactions)
-          trackAction: function (eventName, eventData) {
-            window._trackEvent("action", eventName, eventData);
-          },
-
-          // Track conversion events (purchases, sign-ups, goal completions)
-          trackConversion: function (eventName, eventData, purchaseInfo) {
-            window._trackEvent("conversion", eventName, eventData, {
-              purchaseInfo: purchaseInfo || {
-                transactionId: "",
-                value: 0,
-                currency: "USD",
-                status: "Pending",
-                items: [],
-              },
-            });
-          },
-
-          // Track feedback events (ratings, reviews, surveys)
-          trackFeedback: function (eventName, eventData) {
-            window._trackEvent("feedback", eventName, eventData);
-          },
-
-          // Update user profile information
-          updateProfile: function (profileData, extData) {
-            window._trackEvent(
-              "profile",
-              "update_profile",
-              {},
-              {
-                profileData: profileData || {},
-                extData: extData || {},
-              }
-            );
-          },
-        };
-
-        // Helper function to parse UTM parameters
-        window.parseUtmParams = function () {
-          if (location.search.indexOf("utm_") > 0) {
-            var search = location.search.substring(1);
-            var json = decodeURI(search)
-              .replace(/"/g, '\\"')
-              .replace(/&/g, '","')
-              .replace(/=/g, '":"');
-            return JSON.parse('{"' + json + '"}');
-          }
-          return {};
-        };
-      })();
-
-      // Function to load the CDP tracker script from CDN
-      function initializeTracking() {
-        // Remove existing script if any
-        const existingScript = document.getElementById("cdp-script");
-        if (existingScript) {
-          existingScript.remove();
-        }
-
-        // Create and load the script
-        const script = document.createElement("script");
-        script.id = "cdp-script";
-        script.src = `http://${window.cdpTrackerCdnDomain}/cdp-tracker.js`;
-        script.async = true;
-        script.onerror = function () {
-          logEvent(
-            "Error loading CDP script. Make sure the server is running and serving the cdp-tracker.js file."
-          );
-        };
-        script.onload = function () {
-          logEvent("CDP script loaded successfully.");
-        };
-        document.body.appendChild(script);
-      }
-
-      // Event handlers
-      document
-        .getElementById("track-page-view")
-        .addEventListener("click", function () {
-          if (window.CDP) {
-            window.CDP.trackView("page_view", {
-              page: window.location.pathname,
-            });
-            logEvent("Tracked page_view event");
-          } else {
-            logEvent("CDP not loaded yet");
-          }
-        });
-
-      document
-        .getElementById("track-content-impression")
-        .addEventListener("click", function () {
-          if (window.CDP) {
-            window.CDP.trackView("content_impression", {
-              content_id: "article-123",
-              content_type: "article",
-            });
-            logEvent("Tracked content_impression event");
-          } else {
-            logEvent("CDP not loaded yet");
-          }
-        });
-
-      document
-        .getElementById("track-button-click")
-        .addEventListener("click", function () {
-          if (window.CDP) {
-            window.CDP.trackAction("button_click", {
-              button_id: "test-button",
-              button_text: "Test Button",
-            });
-            logEvent("Tracked button_click event");
-          } else {
-            logEvent("CDP not loaded yet");
-          }
-        });
-
-      document
-        .getElementById("track-form-submit")
-        .addEventListener("click", function () {
-          if (window.CDP) {
-            window.CDP.trackAction("form_submit", {
-              form_id: "test-form",
-              form_name: "Test Form",
-            });
-            logEvent("Tracked form_submit event");
-          } else {
-            logEvent("CDP not loaded yet");
-          }
-        });
-
-      document
-        .getElementById("track-purchase")
-        .addEventListener("click", function () {
-          if (window.CDP) {
-            window.CDP.trackConversion(
-              "purchase",
-              { payment_method: "credit_card" },
-              {
-                transactionId: "TXN-20250303-0001",
-                value: 500.75,
-                currency: "USD",
-                status: "Completed",
-                timestamp: "2025-03-03T04:36:02.955Z",
-                store: {
-                  id: "STORE-001",
-                  name: "Example Store",
-                  branch: "Downtown",
-                  location: {
-                    country: "USA",
-                    state: "California",
-                    city: "San Francisco",
-                    address: "123 Market Street",
-                  },
-                },
-                customer: {
-                  id: "CUST-123456",
-                  email: "john.doe@example.com",
-                  phone: "+84901234567",
-                  firstName: "John",
-                  lastName: "Doe",
-                  type: "VIP",
-                  segment: "High-Value",
-                  membershipId: "MEM-98765",
-                  isNewCustomer: false,
-                },
-                payment: {
-                  method: "Credit Card",
-                  gateway: "Stripe",
-                  installments: 3,
-                  status: "Paid",
-                  cardType: "Visa",
-                  last4: "4242",
-                },
-                discount: {
-                  total: 50.75,
-                  code: "SPRINGSALE2025",
-                  type: "Percentage",
-                  campaign: "Spring Sale",
-                },
-                items: [
-                  {
-                    id: "PROD-001",
-                    sku: "SKU-12345",
-                    name: "Wireless Headphones",
-                    category: "Electronics",
-                    subcategory: "Audio",
-                    brand: "Sony",
-                    variant: "Black",
-                    price: 200.0,
-                    originalPrice: 250.0,
-                    quantity: 2,
-                    currency: "USD",
-                    discount: {
-                      amount: 25.0,
-                      type: "Fixed",
-                    },
-                  },
-                  {
-                    id: "PROD-002",
-                    sku: "SKU-54321",
-                    name: "Smart Watch",
-                    category: "Wearables",
-                    subcategory: "Watches",
-                    brand: "Apple",
-                    variant: "Silver",
-                    price: 300.75,
-                    originalPrice: 350.75,
-                    quantity: 1,
-                    currency: "USD",
-                    discount: {
-                      amount: 25.0,
-                      type: "Fixed",
-                    },
-                  },
-                ],
-              }
-            );
-            logEvent("Tracked purchase event");
-          } else {
-            logEvent("CDP not loaded yet");
-          }
-        });
-
-      document
-        .getElementById("track-signup")
-        .addEventListener("click", function () {
-          if (window.CDP) {
-            window.CDP.trackConversion(
-              "signup",
-              { signup_method: "email" },
-              {
-                transactionId: "USER123",
-                value: 0,
-                currency: "USD",
-                status: "Completed",
-                items: [],
-              }
-            );
-            logEvent("Tracked signup event");
-          } else {
-            logEvent("CDP not loaded yet");
-          }
-        });
-
-      document
-        .getElementById("track-rating")
-        .addEventListener("click", function () {
-          if (window.CDP) {
-            window.CDP.trackFeedback("product_rating", {
-              product_id: "PROD1",
-              rating: 5,
-              comment: "Great product!",
-            });
-            logEvent("Tracked product_rating event");
-          } else {
-            logEvent("CDP not loaded yet");
-          }
-        });
-
-      document
-        .getElementById("track-survey")
-        .addEventListener("click", function () {
-          if (window.CDP) {
-            window.CDP.trackFeedback("survey_response", {
-              survey_id: "SURV1",
-              question_id: "Q1",
-              response: "Very satisfied",
-            });
-            logEvent("Tracked survey_response event");
-          } else {
-            logEvent("CDP not loaded yet");
-          }
-        });
-
-      document
-        .getElementById("update-profile")
-        .addEventListener("click", function () {
-          if (window.CDP) {
-            window.CDP.updateProfile(
-              {
-                email: "test@example.com",
-                name: "Test User",
-                age: 30,
-                interests: ["technology", "sports"],
-              },
-              {
-                source: "test_page",
-                consent: {
-                  marketing: true,
-                  analytics: true,
-                },
-              }
-            );
-            logEvent("Updated profile");
-          } else {
-            logEvent("CDP not loaded yet");
-          }
-        });
-
-      document
-        .getElementById("track-custom")
-        .addEventListener("click", function () {
-          if (window.CDP) {
-            const eventType = document.getElementById("event-type").value;
-            const eventName = document.getElementById("event-name").value;
-            let eventData;
-
-            try {
-              eventData = JSON.parse(
-                document.getElementById("event-data").value
-              );
-            } catch (e) {
-              logEvent("Error parsing event data JSON");
-              return;
-            }
-
-            switch (eventType) {
-              case "view":
-                window.CDP.trackView(eventName, eventData);
-                break;
-              case "action":
-                window.CDP.trackAction(eventName, eventData);
-                break;
-              case "conversion":
-                window.CDP.trackConversion(eventName, eventData, {
-                  transactionId: "CUSTOM123",
-                  value: 0,
-                  currency: "USD",
-                  status: "Completed",
-                  items: [],
-                });
-                break;
-              case "feedback":
-                window.CDP.trackFeedback(eventName, eventData);
-                break;
-              case "profile":
-                window.CDP.updateProfile(eventData, {});
-                break;
-            }
-
-            logEvent(`Tracked custom ${eventType} event: ${eventName}`);
-          } else {
-            logEvent("CDP not loaded yet");
-          }
-        });
-
-      // Initialize tracking on page load
-      window.addEventListener("load", initializeTracking);
-
-      // Track page view automatically when script loads
-      window.addEventListener("load", function () {
-        setTimeout(function () {
-          if (window.CDP) {
-            window.CDP.trackView("page_view", window.parseUtmParams());
-          }
-        }, 1000); // Đợi 1 giây để đảm bảo script đã load xong
-      });
-    </script> -->
-    <script>
       // Configuration
       // window.cdpTrackerCdnDomain = "localhost:3000";
       window.cdpTrackerApiDomain = "di-dev.dragoncdp.com";
@@ -905,6 +480,410 @@
       //   ]
       // }
       //);
+    </script> -->
+
+    <script>
+      // Configuration
+      window.cdpTrackerApiDomain = "di-dev.dragoncdp.com";
+      window.cdpTrackerEndpoint = "/api/event/save";
+      window.cdpTrackerHeader = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "token-key":
+          "TOKCC5qxJUBAABXE83fA2A5IzKUBrJq3KcTUcAYgbKo0aCqjzzNtLCGngCC",
+        "token-value":
+          "TOVCC5qxJUBAAByr8vYB09fenYCl0WoiYEYBAtTLe60BceWxv8K3olZdVknh3tlghkjAxpDhq4F5PBoDTBBkGJ4nQMXXX9TVuqs",
+      };
+
+      // Metadata about the current page
+      window.cdpPageTitle = encodeURIComponent(document.title);
+      window.cdpPageUrl = encodeURIComponent(location.href);
+
+      // Helper function to parse UTM parameters
+      window.parseUtmParams = function () {
+        if (location.search.indexOf("utm_") > 0) {
+          var search = location.search.substring(1);
+          var json = decodeURI(search)
+            .replace(/"/g, '"')
+            .replace(/&/g, '","')
+            .replace(/=/g, '":"');
+          return JSON.parse('{"' + json + '"}');
+        }
+        return {};
+      };
+
+      // Function to load the CDP tracker script from CDN
+      function initializeTracking() {
+        // Create and load the script
+        const script = document.createElement("script");
+        script.id = "cdp-script";
+        script.src =
+          "https://cdn.jsdelivr.net/gh/LeTuyen-Kami/TrackingEvent@v12/cdp-tracker.js";
+        script.async = true;
+        document.body.appendChild(script);
+      }
+
+      // Initialize tracking on page load
+      window.addEventListener("load", initializeTracking);
+      // Track page view automatically when script loads
+      window.addEventListener("load", function () {
+        setTimeout(function () {
+          if (window.CDP) {
+            window.CDP.trackView("page_view", window.parseUtmParams());
+          }
+        }, 1000);
+      });
+
+      var cdpTracker = {};
+
+      // Track add-to-cart
+      cdpTracker["add-to-cart"] = function (eventData, data) {
+        if (window.CDP) {
+          window.CDP.track("add-to-cart", eventData, {
+            customer: typeof data.customer === "object" ? data.customer : {},
+            purchase: {
+              transactionId:
+                typeof data.purchase.transactionId === "string"
+                  ? data.purchase.transactionId
+                  : "",
+              value:
+                typeof data.purchase.value === "number"
+                  ? data.purchase.value
+                  : 0,
+              currency:
+                typeof data.purchase.currency === "string"
+                  ? data.purchase.currency
+                  : "",
+              status:
+                typeof data.purchase.status === "string"
+                  ? data.purchase.status
+                  : "",
+              store:
+                typeof data.purchase.store === "object"
+                  ? data.purchase.store
+                  : {},
+              customer:
+                typeof data.purchase.customer === "object"
+                  ? data.purchase.customer
+                  : {},
+              payment:
+                typeof data.purchase.payment === "object"
+                  ? data.purchase.payment
+                  : {},
+              discount:
+                typeof data.purchase.discount === "object"
+                  ? data.purchase.discount
+                  : {},
+              items:
+                typeof data.purchase.items === "object" &&
+                Array.isArray(data.purchase.items)
+                  ? data.purchase.items
+                  : [],
+            },
+          });
+        }
+      };
+
+      // Example:
+      // cdpTracker["add-to-cart"]({ payment_method: "credit_card" },
+      //   purchase: {
+      //     transactionId: "TXN-20250303-0001",
+      //     value: 500.75,
+      //     currency: "USD",
+      //     status: "Completed",
+      //     store: {
+      //       id: "STORE-001",
+      //       name: "Example Store",
+      //       branch: "Downtown",
+      //       location: {
+      //         country: "USA",
+      //         state: "California",
+      //         city: "San Francisco",
+      //         address: "123 Market Street",
+      //       },
+      //     },
+      //     customer: {
+      //       id: "CUST-123456",
+      //       email: "john.doe@example.com",
+      //       phone: "+84901234567",
+      //       firstName: "John",
+      //       lastName: "Doe",
+      //       type: "VIP",
+      //       segment: "High-Value",
+      //       membershipId: "MEM-98765",
+      //       isNewCustomer: false,
+      //     },
+      //     payment: {
+      //       method: "Credit Card",
+      //       gateway: "Stripe",
+      //       installments: 3,
+      //       status: "Paid",
+      //       cardType: "Visa",
+      //       last4: "4242",
+      //     },
+      //     discount: {
+      //       total: 50.75,
+      //       code: "SPRINGSALE2025",
+      //       type: "Percentage",
+      //       campaign: "Spring Sale",
+      //     },
+      //     items: [
+      //       {
+      //         id: "PROD-001",
+      //         sku: "SKU-12345",
+      //         name: "Wireless Headphones",
+      //         category: "Electronics",
+      //         subcategory: "Audio",
+      //         brand: "Sony",
+      //         variant: "Black",
+      //         price: 200.0,
+      //         originalPrice: 250.0,
+      //         quantity: 2,
+      //         currency: "USD",
+      //         discount: {
+      //           amount: 25.0,
+      //           type: "Fixed",
+      //         },
+      //       },
+      //       {
+      //         id: "PROD-002",
+      //         sku: "SKU-54321",
+      //         name: "Smart Watch",
+      //         category: "Wearables",
+      //         subcategory: "Watches",
+      //         brand: "Apple",
+      //         variant: "Silver",
+      //         price: 300.75,
+      //         originalPrice: 350.75,
+      //         quantity: 1,
+      //         currency: "USD",
+      //         discount: {
+      //           amount: 25.0,
+      //           type: "Fixed",
+      //         },
+      //       },
+      //     ],
+      //   },
+      // }
+      // );
+      // Track click-details
+      cdpTracker["click-details"] = function (eventData, data) {
+        if (window.CDP) {
+          window.CDP.track("click-details", eventData, {
+            customer: typeof data.customer === "object" ? data.customer : {},
+            purchase: {
+              transactionId:
+                typeof data.purchase.transactionId === "string"
+                  ? data.purchase.transactionId
+                  : "",
+              value:
+                typeof data.purchase.value === "number"
+                  ? data.purchase.value
+                  : 0,
+              currency:
+                typeof data.purchase.currency === "string"
+                  ? data.purchase.currency
+                  : "",
+              status:
+                typeof data.purchase.status === "string"
+                  ? data.purchase.status
+                  : "",
+              store:
+                typeof data.purchase.store === "object"
+                  ? data.purchase.store
+                  : {},
+              customer:
+                typeof data.purchase.customer === "object"
+                  ? data.purchase.customer
+                  : {},
+              payment:
+                typeof data.purchase.payment === "object"
+                  ? data.purchase.payment
+                  : {},
+              discount:
+                typeof data.purchase.discount === "object"
+                  ? data.purchase.discount
+                  : {},
+              items:
+                typeof data.purchase.items === "object" &&
+                Array.isArray(data.purchase.items)
+                  ? data.purchase.items
+                  : [],
+            },
+          });
+        }
+      };
+
+      // Example:
+      // cdpTracker["click-details"]({ payment_method: "credit_card" },
+      //   purchase: {
+      //     transactionId: "TXN-20250303-0001",
+      //     value: 500.75,
+      //     currency: "USD",
+      //     status: "Completed",
+      //     store: {
+      //       id: "STORE-001",
+      //       name: "Example Store",
+      //       branch: "Downtown",
+      //       location: {
+      //         country: "USA",
+      //         state: "California",
+      //         city: "San Francisco",
+      //         address: "123 Market Street",
+      //       },
+      //     },
+      //     customer: {
+      //       id: "CUST-123456",
+      //       email: "john.doe@example.com",
+      //       phone: "+84901234567",
+      //       firstName: "John",
+      //       lastName: "Doe",
+      //       type: "VIP",
+      //       segment: "High-Value",
+      //       membershipId: "MEM-98765",
+      //       isNewCustomer: false,
+      //     },
+      //     payment: {
+      //       method: "Credit Card",
+      //       gateway: "Stripe",
+      //       installments: 3,
+      //       status: "Paid",
+      //       cardType: "Visa",
+      //       last4: "4242",
+      //     },
+      //     discount: {
+      //       total: 50.75,
+      //       code: "SPRINGSALE2025",
+      //       type: "Percentage",
+      //       campaign: "Spring Sale",
+      //     },
+      //     items: [
+      //       {
+      //         id: "PROD-001",
+      //         sku: "SKU-12345",
+      //         name: "Wireless Headphones",
+      //         category: "Electronics",
+      //         subcategory: "Audio",
+      //         brand: "Sony",
+      //         variant: "Black",
+      //         price: 200.0,
+      //         originalPrice: 250.0,
+      //         quantity: 2,
+      //         currency: "USD",
+      //         discount: {
+      //           amount: 25.0,
+      //           type: "Fixed",
+      //         },
+      //       },
+      //       {
+      //         id: "PROD-002",
+      //         sku: "SKU-54321",
+      //         name: "Smart Watch",
+      //         category: "Wearables",
+      //         subcategory: "Watches",
+      //         brand: "Apple",
+      //         variant: "Silver",
+      //         price: 300.75,
+      //         originalPrice: 350.75,
+      //         quantity: 1,
+      //         currency: "USD",
+      //         discount: {
+      //           amount: 25.0,
+      //           type: "Fixed",
+      //         },
+      //       },
+      //     ],
+      //   },
+      // }
+      //);
+
+      document
+        .getElementById("track-page-view")
+        .addEventListener("click", function () {
+          cdpTracker["add-to-cart"](
+            { payment_method: "credit_card" },
+            {
+              purchase: {
+                transactionId: "TXN-20250303-0001",
+                value: 500.75,
+                currency: "USD",
+                status: "Completed",
+                store: {
+                  id: "STORE-001",
+                  name: "Example Store",
+                  branch: "Downtown",
+                  location: {
+                    country: "USA",
+                    state: "California",
+                    city: "San Francisco",
+                    address: "123 Market Street",
+                  },
+                },
+                customer: {
+                  id: "CUST-123456",
+                  email: "john.doe@example.com",
+                  phone: "+84901234567",
+                  firstName: "John",
+                  lastName: "Doe",
+                  type: "VIP",
+                  segment: "High-Value",
+                  membershipId: "MEM-98765",
+                  isNewCustomer: false,
+                },
+                payment: {
+                  method: "Credit Card",
+                  gateway: "Stripe",
+                  installments: 3,
+                  status: "Paid",
+                  cardType: "Visa",
+                  last4: "4242",
+                },
+                discount: {
+                  total: 50.75,
+                  code: "SPRINGSALE2025",
+                  type: "Percentage",
+                  campaign: "Spring Sale",
+                },
+                items: [
+                  {
+                    id: "PROD-001",
+                    sku: "SKU-12345",
+                    name: "Wireless Headphones",
+                    category: "Electronics",
+                    subcategory: "Audio",
+                    brand: "Sony",
+                    variant: "Black",
+                    price: 200.0,
+                    originalPrice: 250.0,
+                    quantity: 2,
+                    currency: "USD",
+                    discount: {
+                      amount: 25.0,
+                      type: "Fixed",
+                    },
+                  },
+                  {
+                    id: "PROD-002",
+                    sku: "SKU-54321",
+                    name: "Smart Watch",
+                    category: "Wearables",
+                    subcategory: "Watches",
+                    brand: "Apple",
+                    variant: "Silver",
+                    price: 300.75,
+                    originalPrice: 350.75,
+                    quantity: 1,
+                    currency: "USD",
+                    discount: {
+                      amount: 25.0,
+                      type: "Fixed",
+                    },
+                  },
+                ],
+              },
+            }
+          );
+        });
     </script>
   </body>
 </html>

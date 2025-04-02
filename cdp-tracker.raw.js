@@ -196,7 +196,8 @@
       // Use the new purchaseInfo object structure
       event.purchaseInfo = extraParams.purchaseInfo
         ? {
-            ...extraParams.purchaseInfo.purchase,
+            ...(extraParams.purchaseInfo?.purchase || {}),
+            ...(extraParams.purchaseInfo?.product || {}),
           }
         : {};
 
